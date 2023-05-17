@@ -138,9 +138,8 @@
             playerEl.src = streamUrl;
             playerEl.controls = true;
             playerEl.playsinline = true;
-            playerEl.addEventListener('loadedmetadata',function() {
-                playerEl.play();
-            });
+            playerEl.autoplay = true;
+            playerEl.loop = true;
         }
       }
     
