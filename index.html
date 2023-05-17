@@ -33,6 +33,7 @@
             margin-bottom: 0;
             padding: 8px;
             border-radius: 12px;
+            cursor: pointer;
         }
         .player {
             width: 100%;
@@ -194,8 +195,7 @@
           loadStream(spot.streamId, playerEl);
       });
 
-      const toggleFocus = (e) => {
-          const playerWrapperEl = e.target.closest('.playerWrapper');
+      const toggleFocus = (playerWrapperEl) => {
           if(playerWrapperEl.classList.contains('focused')) {
               playerWrapperEl.classList.remove('focused');
           } else {
@@ -203,7 +203,7 @@
           }
       }
 
-      $('.playerWrapper').on('click', toggleFocus);
+      $('.playerWrapper').on('click', () => toggleFocus(this.target));
 
       // Stream sources:
       //
