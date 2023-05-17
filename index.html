@@ -14,10 +14,17 @@
 
 <div id="players" class="playersContainer">
     <video id="video1" class="player" muted></video>
-    <video id="video2" class="player" muted></video>
 </div>
 
 <script>
+
+    const spots = [ 
+        { 
+            id: 'saopedroestoria',
+            name: 'Sao Pedro do Estoril',
+            region: 'Linha'
+        }
+    ];
 
   const loadStream = (streamId, playerEl) => {
     if(Hls.isSupported()) {
@@ -36,6 +43,5 @@
     }
   }
   loadStream('saopedroestoria', document.getElementById('video1'));
-  loadStream('saopedroestoria', document.getElementById('video2'));
   
 </script>
