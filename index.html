@@ -68,7 +68,7 @@
       const playerEl = document.createElement('video');
       playerEl.setAttribute('id', spot.streamId);
       playerEl.setAttribute('class', 'player');
-      playerEl.setAttribute('muted', 'true');
+      playerEl.setAttribute('muted', true);
       document.getElementById('players').appendChild(playerEl);
       setTimeout(()=>{loadStream(spot.streamId, playerEl);}, 500);
   });
