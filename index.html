@@ -1,146 +1,170 @@
-<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Godmode</title>
 
-<style>
-    body {
-        background-color: #010409;
-        color: #f0f6fc;
-    }
-
-    .playersContainer {
-        display: flex;
-        flex-direction: row;
-        grid-gap: 16px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .playerWrapper {
-        width: 50vw;
-        max-width: 500px;
-        background-color: #161b22;
-        border: 1px solid #21262d;
-        margin-bottom: 0;
-        padding: 8px;
-        border-radius: 12px;
-    }
-    .player {
-        width: 100%;
-        border-radius: 8px;
-    }
-    .titleWrapper {
-        font-family: 'Poppins', sans-serif;
-        display: flex;
-        justify-content: space-between;
-        padding: 0px 8px;
-
-    }
-    .titleWrapper > h3, .titleWrapper >h4 {
-        margin: 0 0 8px 0;
-    }
-
-    .titleWrapper > h4 {
-        color: #8b949e;
-    }
-
-</style>
-
-<div id="players" class="playersContainer"></div>
-
-<script>
-
-    const spots = [ 
-        { 
-            town: 'Sao Pedro do Estoril',
-            spot: 'Bico',
-            streamId: '5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d',
-            region: 'Linha'
-        },
-        { 
-            town: 'Carcavelos',
-            spot: 'Praia de Carcavelos',
-            streamId: '7dbfbd58-2c72-4c87-3135-3530-6d61-63-a1b9-8dc2ff272a5cd',
-            region: 'Linha'
-        },
-        {
-            town: 'Caparica',
-            spot: 'Praia do Riviera',
-            streamId: '033c1cda-143d-4a55-3835-3530-6d61-63-a933-f44c0821ad62d',
-            region: 'Almada',
-        },
-        {
-            town: 'Caparica',
-            spot: 'Praia do CDS',
-            streamId: 'b969e298-ceb4-4132-3635-3530-6d61-63-82b6-c59507e55b39d',
-            region: 'Almada',
-        },
-        {
-            town: 'Guincho',
-            spot: 'Praia do Guincho - Sul',
-            streamId: '8d2e5d1c-5771-49c8-3834-3530-6d61-63-a417-988a6df6a2f2d',
-            region: 'Cascais',
-        },
-        {
-            town: 'Colares',
-            spot: 'Praia Grande - Sul',
-            streamId: 'f05e1d93-57cf-4e07-3734-3530-6d61-63-8b8c-a57a96c1fc1ed',
-            region: 'Sintra',
-        },
-        {
-            town: 'Ericeira',
-            spot: 'Praia de Sao Lourenco',
-            streamId: 'f05e1d93-57cf-4e07-3734-3530-6d61-63-8b8c-a57a96c1fc1ed',
-            region: 'Mafra',
+    <!-- Link to external CSS file -->
+    <style>
+        body {
+            background-color: #010409;
+            color: #f0f6fc;
         }
-    ];
+    
+        .playersContainer {
+            display: flex;
+            flex-direction: row;
+            grid-gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .playerWrapper {
+            width: 50vw;
+            max-width: 500px;
+            background-color: #161b22;
+            border: 1px solid #21262d;
+            margin-bottom: 0;
+            padding: 8px;
+            border-radius: 12px;
+        }
+        .player {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .titleWrapper {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: space-between;
+            padding: 0px 8px;
+    
+        }
+        .titleWrapper > h3, .titleWrapper >h4 {
+            margin: 0 0 8px 0;
+        }
+    
+        .titleWrapper > h4 {
+            color: #8b949e;
+        }
+    
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <header>
+        <h1>🏄 godmode</h1>
+    </header>
 
-  const loadStream = (streamId, playerEl) => {
+    <main>
+        <!-- Main content goes here -->
+        <div id="players" class="playersContainer"></div>
+    </main>
 
-    const streamUrl = 'https://deliverys5.quanteec.com/contents/encodings/live/'+streamId+'/media_0.m3u8';
-    if(Hls.isSupported()) {
-        var hls = new Hls();
-        hls.loadSource(streamUrl);
-        hls.attachMedia(playerEl);
-        hls.on(Hls.Events.MANIFEST_PARSED,function() {
-        playerEl.play();
-        });
-    }
-    else if (playerEl.canPlayType('application/vnd.apple.mpegurl')) {
-        playerEl.src = streamUrl;
-        playerEl.addEventListener('loadedmetadata',function() {
-        playerEl.play();
-        });
-    }
-  }
+    <footer>
+        <!-- Footer content goes here -->
+        <p>Copyright &copy; 2023 godmode</p>
+    </footer>
+    
+    <script>
 
-  spots.forEach(spot => {
-      const wrapperEl = document.createElement('div');
-      wrapperEl.setAttribute('class', 'playerWrapper');
-      const playerEl = document.createElement('video');
-      playerEl.setAttribute('id', spot.streamId);
-      playerEl.setAttribute('class', 'player');
-      playerEl.muted = true;
+        const spots = [ 
+            { 
+                town: 'Sao Pedro do Estoril',
+                spot: 'Bico',
+                streamId: '5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d',
+                region: 'Linha'
+            },
+            { 
+                town: 'Carcavelos',
+                spot: 'Praia de Carcavelos',
+                streamId: '7dbfbd58-2c72-4c87-3135-3530-6d61-63-a1b9-8dc2ff272a5cd',
+                region: 'Linha'
+            },
+            {
+                town: 'Caparica',
+                spot: 'Praia do Riviera',
+                streamId: '033c1cda-143d-4a55-3835-3530-6d61-63-a933-f44c0821ad62d',
+                region: 'Almada',
+            },
+            {
+                town: 'Caparica',
+                spot: 'Praia do CDS',
+                streamId: 'b969e298-ceb4-4132-3635-3530-6d61-63-82b6-c59507e55b39d',
+                region: 'Almada',
+            },
+            {
+                town: 'Guincho',
+                spot: 'Praia do Guincho - Sul',
+                streamId: '8d2e5d1c-5771-49c8-3834-3530-6d61-63-a417-988a6df6a2f2d',
+                region: 'Cascais',
+            },
+            {
+                town: 'Colares',
+                spot: 'Praia Grande - Sul',
+                streamId: 'f05e1d93-57cf-4e07-3734-3530-6d61-63-8b8c-a57a96c1fc1ed',
+                region: 'Sintra',
+            },
+            {
+                town: 'Ericeira',
+                spot: 'Praia de Sao Lourenco',
+                streamId: 'f05e1d93-57cf-4e07-3734-3530-6d61-63-8b8c-a57a96c1fc1ed',
+                region: 'Mafra',
+            }
+        ];
+    
+      const loadStream = (streamId, playerEl) => {
+    
+        const streamUrl = 'https://deliverys5.quanteec.com/contents/encodings/live/'+streamId+'/media_0.m3u8';
+        if(Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(streamUrl);
+            hls.attachMedia(playerEl);
+            hls.on(Hls.Events.MANIFEST_PARSED,function() {
+            playerEl.play();
+            });
+        }
+        else if (playerEl.canPlayType('application/vnd.apple.mpegurl')) {
+            playerEl.src = streamUrl;
+            playerEl.addEventListener('loadedmetadata',function() {
+            playerEl.play();
+            });
+        }
+      }
+    
+      spots.forEach(spot => {
+          const wrapperEl = document.createElement('div');
+          wrapperEl.setAttribute('class', 'playerWrapper');
+          const playerEl = document.createElement('video');
+          playerEl.setAttribute('id', spot.streamId);
+          playerEl.setAttribute('class', 'player');
+          playerEl.muted = true;
+    
+          const titleEl = document.createElement('h3');
+          titleEl.innerText = spot.spot;
+          const subTitleEl = document.createElement('h4');
+          subTitleEl.innerText = spot.town;
+          const titleWrapperEl = document.createElement('div');
+          titleWrapperEl.appendChild(titleEl);
+          titleWrapperEl.appendChild(subTitleEl);
+          titleWrapperEl.setAttribute('class', 'titleWrapper');
+    
+          wrapperEl.appendChild(titleWrapperEl);
+          wrapperEl.appendChild(playerEl);
+    
+          document.getElementById('players').appendChild(wrapperEl);
+          setTimeout(()=>{loadStream(spot.streamId, playerEl);}, 500);
+      });
+      
+      // Stream sources:
+      //
+      // Go surf - Sao Pedro: https://deliverys5.quanteec.com/contents/encodings/live/5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d/media_0.m3u8
+      // Go surf - Carcavelos: https://deliverys6.quanteec.com/contents/encodings/live/7dbfbd58-2c72-4c87-3135-3530-6d61-63-a1b9-8dc2ff272a5cd/media_0.m3u8
+    </script>
 
-      const titleEl = document.createElement('h3');
-      titleEl.innerText = spot.spot;
-      const subTitleEl = document.createElement('h4');
-      subTitleEl.innerText = spot.town;
-      const titleWrapperEl = document.createElement('div');
-      titleWrapperEl.appendChild(titleEl);
-      titleWrapperEl.appendChild(subTitleEl);
-      titleWrapperEl.setAttribute('class', 'titleWrapper');
-
-      wrapperEl.appendChild(titleWrapperEl);
-      wrapperEl.appendChild(playerEl);
-
-      document.getElementById('players').appendChild(wrapperEl);
-      setTimeout(()=>{loadStream(spot.streamId, playerEl);}, 500);
-  });
-  
-  // Stream sources:
-  //
-  // Go surf - Sao Pedro: https://deliverys5.quanteec.com/contents/encodings/live/5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d/media_0.m3u8
-  // Go surf - Carcavelos: https://deliverys6.quanteec.com/contents/encodings/live/7dbfbd58-2c72-4c87-3135-3530-6d61-63-a1b9-8dc2ff272a5cd/media_0.m3u8
-</script>
+</body>
+</html>
