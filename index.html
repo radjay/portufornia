@@ -207,8 +207,9 @@
           }
       }
 
-      $('.playerWrapper').on('click', () => toggleFocus(this.target));
-
+    $('.playerWrapper').each( (index, player) => {
+        $(player).on('click', () => { $(player).toggleClass('focused') });      
+    });
       // Stream sources:
       //
       // Go surf - Sao Pedro: https://deliverys5.quanteec.com/contents/encodings/live/5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d/media_0.m3u8
