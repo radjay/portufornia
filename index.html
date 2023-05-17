@@ -1,9 +1,10 @@
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <style>
     .playersContainer {
-        background-color: aquamarine;
         display: flex;
         flex-direction: row;
+        grid-gap: 12px;
+        flex-wrap: wrap;
     }
     .player {
         width: 50vw;
@@ -66,7 +67,7 @@
       const playerEl = document.createElement('video');
       playerEl.setAttribute('id', spot.streamId);
       playerEl.setAttribute('class', 'player');
-      playerEl.setAttribute('muted', 'true');
+      playerEl.setAttribute('muted');
       document.getElementById('players').appendChild(playerEl);
       loadStream(spot.streamId, playerEl);
   });
