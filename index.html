@@ -165,19 +165,21 @@
           wrapperEl.appendChild(playerEl);
     
           document.getElementById('players').appendChild(wrapperEl);
-          setTimeout(()=>{loadStream(spot.streamId, playerEl);}, 500);
+          loadStream(spot.streamId, playerEl);
       });
 
       $(() => {
-        const videoList = document.querySelectorAll("video")
-        // mute all videos
-        videoList.forEach(video => {
-            video.muted = true;
-        })
-        // Play all videos in mute state
-        videoList.forEach(video => {
-          video.play()
-        })
+        setTimeout(() => {
+            const videoList = document.querySelectorAll("video")
+            // mute all videos
+            videoList.forEach(video => {
+                video.muted = true;
+            })
+            // Play all videos in mute state
+            videoList.forEach(video => {
+            video.play()
+            })
+        }, 2000);
       })
       // Stream sources:
       //
