@@ -42,7 +42,7 @@
             display: flex;
             justify-content: space-between;
             padding: 0px 8px;
-    
+            align-items: flex-end;    
         }
         .titleWrapper > h3, .titleWrapper >h4 {
             margin: 0 0 8px 0;
@@ -50,6 +50,23 @@
     
         .titleWrapper > h4 {
             color: #8b949e;
+        }
+        
+        .playerWrapper.focused {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            max-width: 100%;
+            padding:0;
+            align-items: center;
+            display: flex;
+        }
+
+        .playerWrapper.focused > .titleWrapper {
+            display: none;
         }
 
         @media only screen and (max-width: 600px) {
@@ -68,7 +85,7 @@
 </head>
 <body>
     <header>
-        <h1>🏄🌊🎥</h1>
+        <h1>🏄 🌊 🎥</h1>
     </header>
 
     <main>
@@ -176,6 +193,15 @@
           document.getElementById('players').appendChild(wrapperEl);
           loadStream(spot.streamId, playerEl);
       });
+
+      $('spots').on('click', toggleFocus);
+
+      const toggleFocus = (e) => {
+        const playerWrapperEl = e.target.closest('.playerWrapper');
+        if (playerWrapperEl) {
+            playerWrapperEl.classList.toggle('focused');
+        }
+      }
 
       // Stream sources:
       //
