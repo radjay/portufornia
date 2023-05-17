@@ -1,5 +1,10 @@
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <style>
+    .playersContainer {
+        background-color: aquamarine;
+        display: flex;
+        flex-direction: row;
+    }
     .player {
         width: 50vw;
         max-width: 500px;
@@ -7,22 +12,30 @@
     }
 </style>
 
-<video id="video" class="player" muted></video>
+<div id="players" class="playersContainer">
+    <video id="video1" class="player" muted></video>
+    <video id="video2" class="player" muted></video>
+</div>
 
 <script>
-  var video = document.getElementById('video');
-  if(Hls.isSupported()) {
-    var hls = new Hls();
-    hls.loadSource('https://video-auth1.iol.pt/beachcam/saopedroestoria/chunks.m3u8?nimblesessionid=780981133');
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED,function() {
-      video.play();
-    });
+
+  const loadStream = (streamId, playerEl) => {
+    if(Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource('https://video-auth1.iol.pt/beachcam/'+streamId+'/chunks.m3u8?nimblesessionid=780981133');
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED,function() {
+        video.play();
+        });
+    }
+    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = 'https://video-auth1.iol.pt/beachcam/'+streamId+'/chunks.m3u8?nimblesessionid=780981133';
+        video.addEventListener('loadedmetadata',function() {
+        video.play();
+        });
+    }
   }
-  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = 'https://video-auth1.iol.pt/beachcam/saopedroestoria/chunks.m3u8?nimblesessionid=780981133';
-    video.addEventListener('loadedmetadata',function() {
-      video.play();
-    });
-  }
+  loadStream('saopedroestoria', document.getElementById('video1'));
+  loadStream('saopedroestoria', document.getElementById('video2'));
+  
 </script>
