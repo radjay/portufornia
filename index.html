@@ -8,9 +8,12 @@
         flex-wrap: wrap;
         justify-content: center,
     }
-    .player {
+    .playerWrapper {
         width: 50vw;
         max-width: 500px;
+    }
+    .player {
+        width: 100%;
         border-radius: 8px;
     }
 </style>
@@ -85,6 +88,7 @@
 
   spots.forEach(spot => {
       const wrapperEl = document.createElement('div');
+      wrapperEl.setAttribute('class', 'playerWrapper');
       const playerEl = document.createElement('video');
       playerEl.setAttribute('id', spot.streamId);
       playerEl.setAttribute('class', 'player');
