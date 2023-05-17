@@ -137,9 +137,7 @@
         }
         else if (playerEl.canPlayType('application/vnd.apple.mpegurl')) {
             playerEl.src = streamUrl;
-            playerEl.controls = true;
             playerEl.playsinline = true;
-            playerEl.autoplay = true;
             playerEl.muted = true;
         }
       }
@@ -170,11 +168,8 @@
 
       $(() => {
         setTimeout(() => {
+            alert('lfg!!!');
             const videoList = document.querySelectorAll("video")
-            // mute all videos
-            videoList.forEach(video => {
-                video.muted = true;
-            })
             // Play all videos in mute state
             videoList.forEach(video => {
             video.play()
