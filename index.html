@@ -33,16 +33,17 @@
     ];
 
   const loadStream = (streamId, playerEl) => {
+    const sessionId = 780981000 + Math.floor(Math.random() * 1000);
     if(Hls.isSupported()) {
         var hls = new Hls();
-        hls.loadSource('https://video-auth1.iol.pt/beachcam/'+streamId+'/chunks.m3u8?nimblesessionid=780981133');
+        hls.loadSource('https://video-auth1.iol.pt/beachcam/'+streamId+'/chunks.m3u8?nimblesessionid='+sessionId);
         hls.attachMedia(playerEl);
         hls.on(Hls.Events.MANIFEST_PARSED,function() {
         playerEl.play();
         });
     }
     else if (playerEl.canPlayType('application/vnd.apple.mpegurl')) {
-        playerEl.src = 'https://video-auth1.iol.pt/beachcam/'+streamId+'/chunks.m3u8?nimblesessionid=780981133';
+        playerEl.src = 'https://video-auth1.iol.pt/beachcam/'+streamId+'/chunks.m3u8?nimblesessionid='+sessionId;
         playerEl.addEventListener('loadedmetadata',function() {
         playerEl.play();
         });
