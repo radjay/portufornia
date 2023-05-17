@@ -1,1 +1,21 @@
-<video tabindex="-1" id="vjs_video_3_html5_api" data-poster="https://films.viewsurf.com/BCsaopedroestoria_1_1.stream/media.jpg" data-src="5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d" data-type="live" webkit-playsinline="" playsinline="playsinline" class="vjs-tech" preload="auto" loop="" src="blob:https://crossorigin.me/https://gosurf.fr/64c921fa-c48f-49de-b26e-108d7ac893a4" muted="muted"></video>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<video id="video"></video>
+
+<script>
+  var video = document.getElementById('video');
+  if(Hls.isSupported()) {
+    var hls = new Hls();
+    hls.loadSource('https://video-auth1.iol.pt/beachcam/saopedroestoria/chunks.m3u8?nimblesessionid=780981133');
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED,function() {
+      video.play();
+    });
+  }
+  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = 'https://video-auth1.iol.pt/beachcam/saopedroestoria/chunks.m3u8?nimblesessionid=780981133';
+    video.addEventListener('loadedmetadata',function() {
+      video.play();
+    });
+  }
+</script>
