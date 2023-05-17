@@ -12,45 +12,64 @@
     }
 </style>
 
-<div id="players" class="playersContainer">
-    <video id="video1" class="player" muted></video>
-    <video id="video2" class="player" muted></video>
-</div>
+<div id="players" class="playersContainer"></div>
 
 <script>
 
     const spots = [ 
         { 
-            id: 'saopedroestoria',
-            name: 'Sao Pedro do Estoril',
+            town: 'Sao Pedro do Estoril',
+            spot: 'Bico',
+            streamId: '5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d',
             region: 'Linha'
         },
         { 
-            id: 'carcavelos',
-            name: 'Carcavelos',
+            town: 'Carcavelos',
+            spot: 'Praia de Carcavelos',
+            streamId: '7dbfbd58-2c72-4c87-3135-3530-6d61-63-a1b9-8dc2ff272a5cd',
             region: 'Linha'
+        },
+        {
+            town: 'Caparica',
+            spot: 'Praia do Riviera',
+            streamId: '033c1cda-143d-4a55-3835-3530-6d61-63-a933-f44c0821ad62d',
+            region: 'Almada',
+        },
+        {
+            town: 'Caparica',
+            spot: 'Praia do CDS',
+            streamId: 'b969e298-ceb4-4132-3635-3530-6d61-63-82b6-c59507e55b39d',
+            region: 'Almada',
         }
     ];
 
   const loadStream = (streamId, playerEl) => {
+
+    const streamUrl = 'https://deliverys5.quanteec.com/contents/encodings/live/'+streamId+'/media_0.m3u8';
     if(Hls.isSupported()) {
         var hls = new Hls();
-        hls.loadSource('https://deliverys5.quanteec.com/contents/encodings/live/'+streamId+'/media_0.m3u8');
+        hls.loadSource(streamUrl);
         hls.attachMedia(playerEl);
         hls.on(Hls.Events.MANIFEST_PARSED,function() {
         playerEl.play();
         });
     }
     else if (playerEl.canPlayType('application/vnd.apple.mpegurl')) {
-        playerEl.src = 'https://deliverys5.quanteec.com/contents/encodings/live/'+streamId+'/media_0.m3u8';
+        playerEl.src = streamUrl;
         playerEl.addEventListener('loadedmetadata',function() {
         playerEl.play();
         });
     }
   }
-  loadStream('5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d', document.getElementById('video1'));
-  loadStream('7dbfbd58-2c72-4c87-3135-3530-6d61-63-a1b9-8dc2ff272a5cd', document.getElementById('video2'));
 
+  spots.forEach(spot => {
+      const playerEl = document.createElement('video');
+      playerEl.setAttribute('id', spot.streamId);
+      playerEl.setAttribute('class', 'player');
+      document.getElementById('players').appendChild(playerEl);
+      loadStream(spot.streamId, playerEl);
+  });
+  
   // Stream sources:
   //
   // Go surf - Sao Pedro: https://deliverys5.quanteec.com/contents/encodings/live/5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d/media_0.m3u8
