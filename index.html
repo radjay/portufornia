@@ -168,11 +168,10 @@
 
       $(() => {
         setTimeout(() => {
-            alert('lfg!!!');
             const videoList = document.querySelectorAll("video")
             // Play all videos in mute state
             videoList.forEach(video => {
-            video.play()
+                video.play().then(() => {}).catch((error) => { alert(error) })
             })
         }, 2000);
       })
