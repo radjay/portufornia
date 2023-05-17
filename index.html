@@ -139,6 +139,13 @@
             playerEl.src = streamUrl;
             playerEl.playsInline = true;
             playerEl.muted = true;
+            playerEl.addEventListener('loadedmetadata',function() {
+                playerEl.play().then(_ => {
+                    // Autoplay started
+                }).catch(error => {
+                    // Autoplay was prevented, show a "Play" button to the user
+                });
+            });
         }
       }
     
@@ -166,15 +173,6 @@
           loadStream(spot.streamId, playerEl);
       });
 
-      $(() => {
-        setTimeout(() => {
-            const videoList = document.querySelectorAll("video")
-            // Play all videos in mute state
-            videoList.forEach(video => {
-                video.play().then(() => {}).catch((error) => { alert(error) })
-            })
-        }, 2000);
-      })
       // Stream sources:
       //
       // Go surf - Sao Pedro: https://deliverys5.quanteec.com/contents/encodings/live/5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d/media_0.m3u8
