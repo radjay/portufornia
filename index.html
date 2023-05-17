@@ -14,6 +14,7 @@
 
 <div id="players" class="playersContainer">
     <video id="video1" class="player" muted></video>
+    <video id="video2" class="player" muted></video>
 </div>
 
 <script>
@@ -22,6 +23,11 @@
         { 
             id: 'saopedroestoria',
             name: 'Sao Pedro do Estoril',
+            region: 'Linha'
+        },
+        { 
+            id: 'carcavelos',
+            name: 'Carcavelos',
             region: 'Linha'
         }
     ];
@@ -43,5 +49,6 @@
     }
   }
   loadStream('saopedroestoria', document.getElementById('video1'));
+  loadStream('carcavelos', document.getElementById('video2'));
   
 </script>
