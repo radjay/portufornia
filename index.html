@@ -64,6 +64,7 @@
 <body>
     <header>
         <h1>🏄 godmode</h1>
+        <button id="playall">Lets f-ing go</button>
     </header>
 
     <main>
@@ -165,6 +166,12 @@
     
           document.getElementById('players').appendChild(wrapperEl);
           setTimeout(()=>{loadStream(spot.streamId, playerEl);}, 500);
+      });
+
+      $('#playall').click(() => {
+          $('video').each((i, el) => {
+              el.play();
+          });
       });
       
       // Stream sources:
