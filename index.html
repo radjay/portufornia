@@ -5,18 +5,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
+    body {
+        background-color: #010409;
+        color: #f0f6fc;
+    }
+
     .playersContainer {
         display: flex;
         flex-direction: row;
-        grid-gap: 12px;
+        grid-gap: 16px;
         flex-wrap: wrap;
         justify-content: center;
     }
     .playerWrapper {
         width: 50vw;
         max-width: 500px;
-        margin-bottom: 16px;
-        background-color: aliceblue;
+        background-color: #161b22;
+        border: 1px solid #21262d;
+        margin-bottom: 0;
         padding: 8px;
         border-radius: 12px;
     }
@@ -28,13 +34,15 @@
         font-family: 'Poppins', sans-serif;
         display: flex;
         justify-content: space-between;
+        padding: 0px 8px;
+
     }
     .titleWrapper > h3, .titleWrapper >h4 {
         margin: 0 0 8px 0;
     }
 
     .titleWrapper > h4 {
-        color: grey;
+        color: #8b949e;
     }
 
 </style>
