@@ -8,6 +8,7 @@
     <!-- Link to external CSS file -->
     <style>
         body {
+            font-family: 'Poppins', sans-serif;
             background-color: #010409;
             color: #f0f6fc;
         }
@@ -33,7 +34,6 @@
             border-radius: 8px;
         }
         .titleWrapper {
-            font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: space-between;
             padding: 0px 8px;
@@ -69,7 +69,7 @@
         <!-- Footer content goes here -->
         <p>Copyright &copy; 2023 godmode</p>
     </footer>
-    
+
     <script>
 
         const spots = [ 
@@ -130,8 +130,9 @@
         }
         else if (playerEl.canPlayType('application/vnd.apple.mpegurl')) {
             playerEl.src = streamUrl;
+            playerEl.controls = true;
             playerEl.addEventListener('loadedmetadata',function() {
-            playerEl.play();
+                playerEl.play();
             });
         }
       }
