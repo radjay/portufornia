@@ -137,6 +137,7 @@
         else if (playerEl.canPlayType('application/vnd.apple.mpegurl')) {
             playerEl.src = streamUrl;
             playerEl.controls = true;
+            playerEl.playsinline = true;
             playerEl.addEventListener('loadedmetadata',function() {
                 playerEl.play();
             });
