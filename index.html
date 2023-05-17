@@ -137,6 +137,10 @@
         }
         else if (playerEl.canPlayType('application/vnd.apple.mpegurl')) {
             playerEl.src = streamUrl;
+            playerEl.controls = true;
+            playerEl.playsinline = true;
+            playerEl.autoplay = true;
+            playerEl.loop = true;
         }
       }
     
