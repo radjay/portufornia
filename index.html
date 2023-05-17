@@ -6,6 +6,7 @@
         flex-direction: row;
         grid-gap: 12px;
         flex-wrap: wrap;
+        justify-content: center,
     }
     .player {
         width: 50vw;
@@ -42,6 +43,24 @@
             spot: 'Praia do CDS',
             streamId: 'b969e298-ceb4-4132-3635-3530-6d61-63-82b6-c59507e55b39d',
             region: 'Almada',
+        },
+        {
+            town: 'Guincho',
+            spot: 'Praia do Guincho - Sul',
+            streamId: '8d2e5d1c-5771-49c8-3834-3530-6d61-63-a417-988a6df6a2f2d',
+            region: 'Cascais',
+        },
+        {
+            town: 'Colares',
+            spot: 'Praia Grande - Sul',
+            streamId: 'f05e1d93-57cf-4e07-3734-3530-6d61-63-8b8c-a57a96c1fc1ed',
+            region: 'Sintra',
+        },
+        {
+            town: 'Ericeira',
+            spot: 'Praia de Sao Lourenco',
+            streamId: 'f05e1d93-57cf-4e07-3734-3530-6d61-63-8b8c-a57a96c1fc1ed',
+            region: 'Mafra',
         }
     ];
 
@@ -65,11 +84,19 @@
   }
 
   spots.forEach(spot => {
+      const wrapperEl = document.createElement('div');
       const playerEl = document.createElement('video');
       playerEl.setAttribute('id', spot.streamId);
       playerEl.setAttribute('class', 'player');
       playerEl.muted = true;
-      document.getElementById('players').appendChild(playerEl);
+
+      const titleEl = document.createElement('h3');
+      titleEl.innerText = spot.spot;
+
+      wrapperEl.appendChild(titleEl);
+      wrapperEl.appendChild(playerEl);
+
+      document.getElementById('players').appendChild(wrapperEl);
       setTimeout(()=>{loadStream(spot.streamId, playerEl);}, 500);
   });
   
