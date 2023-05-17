@@ -194,13 +194,15 @@
           loadStream(spot.streamId, playerEl);
       });
 
-      $('spots').on('click', toggleFocus);
+      $('.playerWrapper').on('click', toggleFocus);
 
       const toggleFocus = (e) => {
-        const playerWrapperEl = e.target.closest('.playerWrapper');
-        if (playerWrapperEl) {
-            playerWrapperEl.classList.toggle('focused');
-        }
+          const playerWrapperEl = e.target.closest('.playerWrapper');
+          if(playerWrapperEl.classList.contains('focused')) {
+              playerWrapperEl.classList.remove('focused');
+          } else {
+              playerWrapperEl.classList.add('focused');
+          }
       }
 
       // Stream sources:
