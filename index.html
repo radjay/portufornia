@@ -194,8 +194,6 @@
           loadStream(spot.streamId, playerEl);
       });
 
-      $('.playerWrapper').on('click', toggleFocus);
-
       const toggleFocus = (e) => {
           const playerWrapperEl = e.target.closest('.playerWrapper');
           if(playerWrapperEl.classList.contains('focused')) {
@@ -204,6 +202,8 @@
               playerWrapperEl.classList.add('focused');
           }
       }
+
+      $('.playerWrapper').on('click', toggleFocus);
 
       // Stream sources:
       //
