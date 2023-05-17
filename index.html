@@ -1,6 +1,13 @@
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<style>
+    .player {
+        width: 50vw;
+        max-width: 500px;
+        border-radius: 8px;
+    }
+</style>
 
-<video id="video" muted></video>
+<video id="video" class="player" muted></video>
 
 <script>
   var video = document.getElementById('video');
