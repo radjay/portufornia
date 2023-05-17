@@ -10,7 +10,7 @@
         flex-direction: row;
         grid-gap: 12px;
         flex-wrap: wrap;
-        justify-content: center,
+        justify-content: center;
     }
     .playerWrapper {
         width: 50vw;
@@ -19,6 +19,9 @@
     .player {
         width: 100%;
         border-radius: 8px;
+    }
+    .titleWrapper {
+        font-family: 'Poppins', sans-serif;
     }
 </style>
 
@@ -100,8 +103,14 @@
 
       const titleEl = document.createElement('h3');
       titleEl.innerText = spot.spot;
+      const subTitleEl = document.createElement('h4');
+      subTitleEl.innerText = spot.town;
+      const titleWrapperEl = document.createElement('div');
+      titleWrapperEl.appendChild(titleEl);
+      titleWrapperEl.appendChild(subTitleEl);
+      titleWrapperEl.setAttribute('class', 'titleWrapper');
 
-      wrapperEl.appendChild(titleEl);
+      wrapperEl.appendChild(titleWrapperEl);
       wrapperEl.appendChild(playerEl);
 
       document.getElementById('players').appendChild(wrapperEl);
