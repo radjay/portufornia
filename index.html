@@ -305,6 +305,12 @@
             loadStream(spot.streamId, playerEl);
           }
         });
+
+        $(".playerWrapper").each((index, player) => {
+            $(player).on("click", () => {
+            $(player).toggleClass("focused");
+            });
+        });
       };
 
       const toggleFocus = (playerWrapperEl) => {
@@ -314,12 +320,6 @@
           playerWrapperEl.classList.add("focused");
         }
       };
-
-      $(".playerWrapper").each((index, player) => {
-        $(player).on("click", () => {
-          $(player).toggleClass("focused");
-        });
-      });
 
       document.addEventListener("keydown", function (e) {
         if (e.keyCode == 27) {
