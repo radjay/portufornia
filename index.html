@@ -315,24 +315,6 @@
         }
       };
 
-      const setMode = (mode) => {
-        $("#modeSelector > a").each((index, mode) => {
-          $(mode).on("click", () => {
-            const newMode = $(mode).data("mode");
-            $("#modeSelector > a").removeClass("active");
-            $(mode).addClass("active");
-            localStorage.setItem("mode", newMode);
-            renderSpots(newMode);
-          });
-        });
-      };
-
-      $(".playerWrapper").each((index, player) => {
-        $(player).on("click", () => {
-          $(player).toggleClass("focused");
-        });
-      });
-
       document.addEventListener("keydown", function (e) {
         if (e.keyCode == 27) {
           $(".playerWrapper").removeClass("focused");
@@ -342,6 +324,22 @@
       $(() => {
         const mode = localStorage.getItem("mode") || "surf";
         renderSpots(mode);
+
+        $(".playerWrapper").each((index, player) => {
+          $(player).on("click", () => {
+            $(player).toggleClass("focused");
+          });
+        });
+
+        $("#modeSelector > a").each((index, mode) => {
+          $(mode).on("click", () => {
+            const newMode = $(mode).data("mode");
+            $("#modeSelector > a").removeClass("active");
+            $(mode).addClass("active");
+            localStorage.setItem("mode", newMode);
+            renderSpots(newMode);
+          });
+        });
       });
 
       // Stream sources:
