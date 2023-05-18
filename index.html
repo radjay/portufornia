@@ -1,291 +1,325 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Godmode</title>
 
     <!-- Link to external CSS file -->
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #010409;
-            color: #f0f6fc;
-        }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #010409;
+        color: #f0f6fc;
+      }
 
-        .pageWrapper {
-            position: relative;
-        }
+      .pageWrapper {
+        position: relative;
+      }
 
-        body:before {
-            content: ' ';
-            display: block;
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0.1;
-            background-image: url('./images/ocean-2.jpg');
-            background-repeat: no-repeat;
-            background-position: 50% 0;
-            background-size: cover;
-        }
+      body:before {
+        content: " ";
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0.1;
+        background-image: url("./images/ocean-2.jpg");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        background-size: cover;
+      }
 
-        .pageContent {
-            position: relative;
-        }
+      .pageContent {
+        position: relative;
+      }
 
-        header, footer {
-            text-align: center;
-            color: #8b949e;
-        }
-    
-        .playersContainer {
-            display: flex;
-            flex-direction: row;
-            grid-gap: 16px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
+      header,
+      footer {
+        text-align: center;
+        color: #8b949e;
+      }
+
+      .playersContainer {
+        display: flex;
+        flex-direction: row;
+        grid-gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .playerWrapper {
+        width: 50vw;
+        max-width: 500px;
+        margin-bottom: 0;
+        position: relative;
+        padding: 0;
+        border-radius: 12px;
+      }
+      .playerWrapper:hover {
+        cursor: pointer;
+      }
+      .player {
+        width: 100%;
+        border-radius: 8px;
+      }
+      .titleWrapper {
+        display: flex;
+        justify-content: space-between;
+        padding: 0px 8px;
+        align-items: flex-end;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: #00000099;
+        padding: 12px 16px 0px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
+
+      .titleWrapper > h3,
+      .titleWrapper > h4 {
+        margin: 0 0 8px 0;
+      }
+
+      .titleWrapper > h3 {
+        font-weight: 500;
+      }
+
+      .titleWrapper > h4 {
+        color: #ffffff66;
+        font-weight: 400;
+      }
+
+      .playerWrapper.focused {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        align-items: center;
+        display: flex;
+        background-color: #161b22ee;
+        z-index: 12345;
+      }
+
+      .playerWrapper.focused > .titleWrapper {
+        display: none;
+      }
+
+      @media only screen and (max-width: 600px) {
         .playerWrapper {
-            width: 50vw;
-            max-width: 500px;
-            margin-bottom: 0;
-            position: relative;
-            padding: 0;
-            border-radius: 12px;
+          width: 100%;
+          background-color: transparent;
+          padding: 0;
+          border: none;
+          border-bottom: 1px solid #21262d;
+          border-radius: 0;
+          padding-bottom: 16px;
         }
-        .playerWrapper:hover {
-            cursor: pointer;
-        }
-        .player {
-            width: 100%;
-            border-radius: 8px;
-        }
-        .titleWrapper {
-            display: flex;
-            justify-content: space-between;
-            padding: 0px 8px;
-            align-items: flex-end;    
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: #00000099;
-            padding: 12px 16px 0px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-
-        .titleWrapper > h3, .titleWrapper >h4 {
-            margin: 0 0 8px 0;
-        }
-
-        .titleWrapper > h3 {
-            font-weight: 500;
-        }
-    
-        .titleWrapper > h4 {
-            color: #ffffff66;
-            font-weight: 400;
-        }
-        
-        .playerWrapper.focused {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            max-width: 100%;
-            padding:0;
-            align-items: center;
-            display: flex;
-            background-color: #161b22EE;
-            z-index: 12345;
-        }
-
-        .playerWrapper.focused > .titleWrapper {
-            display: none;
-        }
-
-        @media only screen and (max-width: 600px) {
-            .playerWrapper {
-                width: 100%;
-                background-color: transparent;
-                padding: 0;
-                border: none;
-                border-bottom: 1px solid #21262d;
-                border-radius: 0;
-                padding-bottom: 16px;
-            }
-        }
-    
+      }
     </style>
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-</head>
-<body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <div class="pageWrapper">
-        <div class="pageContent">
-            <header>
-                <h1>🏄</h1>
-            </header>
+      <div class="pageContent">
+        <header>
+          <h1>🏄🇵🇹</h1>
+        </header>
+        <nav id="modeSelector" class="modes">
+          <a data-mode="surf">Surf</a>
+          <a data-mode="kite">Kite</a>
+        </nav>
 
-            <main>
-                <!-- Main content goes here -->
-                <div id="players" class="playersContainer"></div>
-            </main>
+        <main>
+          <!-- Main content goes here -->
+          <div id="players" class="playersContainer"></div>
+        </main>
 
-            <footer>
-                <!-- Footer content goes here -->
-                <p>Copyright &copy; 2023 godmode</p>
-            </footer>
-        </div>
+        <footer>
+          <!-- Footer content goes here -->
+          <p>Copyright &copy; 2023 Portufornia Labs</p>
+        </footer>
+      </div>
     </div>
 
     <script>
+      const spots = [
+        {
+          town: "Sao Pedro do Estoril",
+          spot: "Bico",
+          streamId: "5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d",
+          region: "Linha",
+          sports: ["surf"],
+        },
+        {
+          town: "Carcavelos",
+          spot: "Praia de Carcavelos",
+          streamId: "7dbfbd58-2c72-4c87-3135-3530-6d61-63-a1b9-8dc2ff272a5cd",
+          region: "Linha",
+          sports: ["surf"],
+        },
+        {
+          town: "Guincho",
+          spot: "Praia do Guincho (S)",
+          streamId: "61f5d898-0c04-4515-3934-3530-6d61-63-87e5-3432badee226d",
+          region: "Cascais",
+          sports: ["kite", "surf"],
+        },
+        {
+          town: "Guincho",
+          spot: "Praia do Guincho (N)",
+          streamId: "8d2e5d1c-5771-49c8-3834-3530-6d61-63-a417-988a6df6a2f2d",
+          region: "Cascais",
+          sports: ["kite", "surf"],
+        },
+        {
+          town: "Caparica",
+          spot: "Praia do Sao Joao",
+          streamId: "f829148a-5ae5-4a90-3735-3530-6d61-63-b215-b6a95fb68802d",
+          region: "Almada",
+          sports: ["surf"],
+        },
+        {
+          town: "Caparica",
+          spot: "Praia do CDS",
+          streamId: "b969e298-ceb4-4132-3635-3530-6d61-63-82b6-c59507e55b39d",
+          region: "Almada",
+          sports: ["surf"],
+        },
+        {
+          town: "Caparica",
+          spot: "Praia do Riviera",
+          streamId: "033c1cda-143d-4a55-3835-3530-6d61-63-a933-f44c0821ad62d",
+          region: "Almada",
+          sports: ["surf"],
+        },
+        {
+          town: "Fonte da Telha",
+          spot: "Praia da Fonte Telha",
+          streamId: "a31a9026-5ced-4668-3935-3530-6d61-63-aa32-b07694268059d",
+          region: "Almada",
+          sports: ["kite"],
+        },
+        {
+          town: "Colares",
+          spot: "Praia Grande - Sul",
+          streamId: "f05e1d93-57cf-4e07-3734-3530-6d61-63-8b8c-a57a96c1fc1ed",
+          region: "Sintra",
+          sports: ["surf"],
+        },
+      ];
 
-        const spots = [ 
-            { 
-                town: 'Sao Pedro do Estoril',
-                spot: 'Bico',
-                streamId: '5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d',
-                region: 'Linha'
-            },
-            { 
-                town: 'Carcavelos',
-                spot: 'Praia de Carcavelos',
-                streamId: '7dbfbd58-2c72-4c87-3135-3530-6d61-63-a1b9-8dc2ff272a5cd',
-                region: 'Linha'
-            },
-            {
-                town: 'Guincho',
-                spot: 'Praia do Guincho (S)',
-                streamId: '61f5d898-0c04-4515-3934-3530-6d61-63-87e5-3432badee226d',
-                region: 'Cascais',
-            },
-            {
-                town: 'Guincho',
-                spot: 'Praia do Guincho (N)',
-                streamId: '8d2e5d1c-5771-49c8-3834-3530-6d61-63-a417-988a6df6a2f2d',
-                region: 'Cascais',
-            },
-            {
-                town: 'Caparica',
-                spot: 'Praia do Sao Joao',
-                streamId: 'f829148a-5ae5-4a90-3735-3530-6d61-63-b215-b6a95fb68802d',
-                region: 'Almada',
-            },
-            {
-                town: 'Caparica',
-                spot: 'Praia do CDS',
-                streamId: 'b969e298-ceb4-4132-3635-3530-6d61-63-82b6-c59507e55b39d',
-                region: 'Almada',
-            },
-            {
-                town: 'Caparica',
-                spot: 'Praia do Riviera',
-                streamId: '033c1cda-143d-4a55-3835-3530-6d61-63-a933-f44c0821ad62d',
-                region: 'Almada',
-            },
-            {
-                town: 'Fonte da Telha',
-                spot: 'Praia da Fonte Telha',
-                streamId: 'a31a9026-5ced-4668-3935-3530-6d61-63-aa32-b07694268059d',
-                region: 'Almada',
-            },            
-            {
-                town: 'Colares',
-                spot: 'Praia Grande - Sul',
-                streamId: 'f05e1d93-57cf-4e07-3734-3530-6d61-63-8b8c-a57a96c1fc1ed',
-                region: 'Sintra',
-            },
-            {
-                town: 'Ericeira',
-                spot: 'Praia de Sao Lourenco',
-                streamId: 'f05e1d93-57cf-4e07-3734-3530-6d61-63-8b8c-a57a96c1fc1ed',
-                region: 'Mafra',
-            }
-        ];
-    
       const loadStream = (streamId, playerEl) => {
-    
-        const streamUrl = 'https://deliverys5.quanteec.com/contents/encodings/live/'+streamId+'/media_0.m3u8';
-        if(Hls.isSupported()) {
-            var hls = new Hls();
-            hls.loadSource(streamUrl);
-            hls.attachMedia(playerEl);
-            hls.on(Hls.Events.MANIFEST_PARSED,function() {
+        const streamUrl =
+          "https://deliverys5.quanteec.com/contents/encodings/live/" +
+          streamId +
+          "/media_0.m3u8";
+        if (Hls.isSupported()) {
+          var hls = new Hls();
+          hls.loadSource(streamUrl);
+          hls.attachMedia(playerEl);
+          hls.on(Hls.Events.MANIFEST_PARSED, function () {
             playerEl.play();
-            });
-        }
-        else if (playerEl.canPlayType('application/vnd.apple.mpegurl')) {
-            playerEl.src = streamUrl;
-            playerEl.playsInline = true;
-            playerEl.muted = true;
-            playerEl.addEventListener('loadedmetadata',function() {
-                playerEl.play().then(_ => {
-                    // Autoplay started
-                }).catch(error => {
-                    // Autoplay was prevented, show a "Play" button to the user
-                });
-            });
-        }
-      }
-    
-      spots.forEach(spot => {
-          const wrapperEl = document.createElement('div');
-          wrapperEl.setAttribute('class', 'playerWrapper');
-          const playerEl = document.createElement('video');
-          playerEl.setAttribute('id', spot.streamId);
-          playerEl.setAttribute('class', 'player');
+          });
+        } else if (playerEl.canPlayType("application/vnd.apple.mpegurl")) {
+          playerEl.src = streamUrl;
+          playerEl.playsInline = true;
           playerEl.muted = true;
-    
-          const titleEl = document.createElement('h3');
-          titleEl.innerText = spot.spot;
-          const subTitleEl = document.createElement('h4');
-          subTitleEl.innerText = spot.town;
-          const titleWrapperEl = document.createElement('div');
-          titleWrapperEl.appendChild(titleEl);
-          titleWrapperEl.appendChild(subTitleEl);
-          titleWrapperEl.setAttribute('class', 'titleWrapper');
-    
-          wrapperEl.appendChild(titleWrapperEl);
-          wrapperEl.appendChild(playerEl);
-    
-          document.getElementById('players').appendChild(wrapperEl);
-          loadStream(spot.streamId, playerEl);
-      });
+          playerEl.addEventListener("loadedmetadata", function () {
+            playerEl
+              .play()
+              .then((_) => {
+                // Autoplay started
+              })
+              .catch((error) => {
+                // Autoplay was prevented, show a "Play" button to the user
+              });
+          });
+        }
+      };
+
+      const renderSpots = () => {
+        document.getElementById("players").innerHTML = "";
+
+        spots.forEach((spot) => {
+          if (spot.sports.includes(mode)) {
+            const wrapperEl = document.createElement("div");
+            wrapperEl.setAttribute("class", "playerWrapper");
+            const playerEl = document.createElement("video");
+            playerEl.setAttribute("id", spot.streamId);
+            playerEl.setAttribute("class", "player");
+            playerEl.muted = true;
+
+            const titleEl = document.createElement("h3");
+            titleEl.innerText = spot.spot;
+            const subTitleEl = document.createElement("h4");
+            subTitleEl.innerText = spot.town;
+            const titleWrapperEl = document.createElement("div");
+            titleWrapperEl.appendChild(titleEl);
+            titleWrapperEl.appendChild(subTitleEl);
+            titleWrapperEl.setAttribute("class", "titleWrapper");
+
+            wrapperEl.appendChild(titleWrapperEl);
+            wrapperEl.appendChild(playerEl);
+
+            document.getElementById("players").appendChild(wrapperEl);
+            loadStream(spot.streamId, playerEl);
+          }
+        });
+      };
 
       const toggleFocus = (playerWrapperEl) => {
-          if(playerWrapperEl.classList.contains('focused')) {
-              playerWrapperEl.classList.remove('focused');
-          } else {
-              playerWrapperEl.classList.add('focused');
-          }
-      }
-
-    $('.playerWrapper').each( (index, player) => {
-        $(player).on('click', () => { $(player).toggleClass('focused') });      
-    });
-
-    document.addEventListener('keydown', function(e) {
-        if(e.keyCode == 27){
-            $('.playerWrapper').removeClass('focused');
+        if (playerWrapperEl.classList.contains("focused")) {
+          playerWrapperEl.classList.remove("focused");
+        } else {
+          playerWrapperEl.classList.add("focused");
         }
-    });
+      };
+
+      const mode = localStorage.getItem("mode") || "surf";
+
+      const setMode = (mode) => {
+        localStorage.setItem("mode", mode);
+      };
+
+      $(".playerWrapper").each((index, player) => {
+        $(player).on("click", () => {
+          $(player).toggleClass("focused");
+        });
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.keyCode == 27) {
+          $(".playerWrapper").removeClass("focused");
+        }
+      });
+
+      $(() => {
+        renderSpots();
+      });
 
       // Stream sources:
       //
       // Go surf - Sao Pedro: https://deliverys5.quanteec.com/contents/encodings/live/5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d/media_0.m3u8
       // Go surf - Carcavelos: https://deliverys6.quanteec.com/contents/encodings/live/7dbfbd58-2c72-4c87-3135-3530-6d61-63-a1b9-8dc2ff272a5cd/media_0.m3u8
     </script>
-
-</body>
+  </body>
 </html>
