@@ -335,6 +335,13 @@
                 $($('.playerWrapper')[nextIndex]).addClass('focused');
             }
         }
+        if (e.keyCode == 37) {
+            if (currentIndex >= 0){
+                $('.playerWrapper.focused').removeClass('focused');
+                const nextIndex = currentIndex - 1  < 0 ? $('.playerWrapper').length - 1 : currentIndex - 1;
+                $($('.playerWrapper')[nextIndex]).addClass('focused');
+            }
+        }
       });
 
       const updateMode = (newMode) => {
