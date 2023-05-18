@@ -246,6 +246,8 @@
           region: "Sintra",
           sports: ["surf"],
         },
+        // feeds to add:
+        // - https://www.playocean.net/camaras/costa-da-caparica-panoramica
       ];
 
       const loadStream = (streamId, playerEl) => {
@@ -322,8 +324,16 @@
       };
 
       document.addEventListener("keydown", function (e) {
+        const currentIndex = $('.playerWrapper.focused').index();
         if (e.keyCode == 27) {
           $(".playerWrapper").removeClass("focused");
+        }
+        if (e.keyCode == 39) {
+            if (currentIndex >= 0){
+                $('.playerWrapper.focused').removeClass('focused');
+                const nextIndex = $('.playerWrapper').length > currentIndex+1 ? currentIndex+1 : 0;
+                $($('.playerWrapper')[nextIndex]).addClass('focused');
+            }
         }
       });
 
