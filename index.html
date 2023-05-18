@@ -329,7 +329,7 @@
 
       const updateMode = (newMode) => {
         $("#modeSelector > a").removeClass("active");
-        $(mode).addClass("active");
+        $("#modeSelector > a[data-mode="+mode+"]").addClass("active");
         localStorage.setItem("mode", newMode);
         renderSpots(newMode);
       };
