@@ -112,6 +112,28 @@
         display: none;
       }
 
+      .modes {
+        display: flex;
+        grid-gap: 8px;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+      .modes a {
+        background-color: #ffffff22;
+        padding: 4px 16px;
+        border-radius: 4px;
+        color: #ffffff99;
+      }
+      .modes a:hover {
+        cursor: pointer;
+        background-color: #ffffff33;
+        color: #ffffffbb;
+      }
+      .modes a.active {
+        color: #ffffffcc;
+        background-color: #ffffff44;
+      }
+
       @media only screen and (max-width: 600px) {
         .playerWrapper {
           width: 100%;
@@ -141,12 +163,11 @@
     <div class="pageWrapper">
       <div class="pageContent">
         <header>
-          <h1>🏄🇵🇹</h1>
+          <nav id="modeSelector" class="modes">
+            <a data-mode="surf">🏄‍♂️ Surf</a>
+            <a data-mode="kite">🪁 Kite</a>
+          </nav>
         </header>
-        <nav id="modeSelector" class="modes">
-          <a data-mode="surf">Surf</a>
-          <a data-mode="kite">Kite</a>
-        </nav>
 
         <main>
           <!-- Main content goes here -->
@@ -256,7 +277,7 @@
         }
       };
 
-      const renderSpots = () => {
+      const renderSpots = (mode) => {
         document.getElementById("players").innerHTML = "";
 
         spots.forEach((spot) => {
@@ -294,10 +315,16 @@
         }
       };
 
-      const mode = localStorage.getItem("mode") || "surf";
-
       const setMode = (mode) => {
-        localStorage.setItem("mode", mode);
+        $("#modeSelector > a").each((index, mode) => {
+          $(mode).on("click", () => {
+            const newMode = $(mode).data("mode");
+            $("#modeSelector > a").removeClass("active");
+            $(mode).addClass("active");
+            localStorage.setItem("mode", newMode);
+            renderSpots(newMode);
+          });
+        });
       };
 
       $(".playerWrapper").each((index, player) => {
@@ -313,7 +340,8 @@
       });
 
       $(() => {
-        renderSpots();
+        const mode = localStorage.getItem("mode") || "surf";
+        renderSpots(mode);
       });
 
       // Stream sources:
