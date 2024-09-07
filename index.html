@@ -19,6 +19,10 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Original+Surfer&display=swap"
+      rel="stylesheet"
+    />
     <!-- Google tag (gtag.js) -->
     <script
       async
@@ -34,12 +38,19 @@
       gtag("config", "G-7G8CTBSG2L");
     </script>
   </head>
-  <body>
+  <body class="min-h-screen">
     <div class="pageWrapper">
       <div class="pageContent">
-        <header class="max-w-screen-lg mx-auto p-2">
+        <header
+          class="max-w-screen-lg mx-auto p-2 flex justify-between items-center"
+        >
+          <h1
+            class="text-3xl font-originalSurfer text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 p-2"
+          >
+            Camz
+          </h1>
           <nav id="modeSelector" class="flex flex-row justify-end gap-1">
-            <a data-mode="surf" class="btn btn-sm">🏄‍♂️ Surf</a>
+            <a data-mode="surf" class="btn btn-sm btn-accent">🏄‍♂️ Surf</a>
             <a data-mode="kite" class="btn btn-sm">🌬️ Wind</a>
           </nav>
         </header>
@@ -49,9 +60,11 @@
           <div id="players" class="playersContainer"></div>
         </main>
 
-        <footer>
+        <footer
+          class="flex justify-center items-center p-6 text-sm text-gray-500"
+        >
           <!-- Footer content goes here -->
-          <p>Copyright &copy; 2023 Portufornia Labs</p>
+          <p>A project by Portufornia Labs</p>
         </footer>
       </div>
     </div>
