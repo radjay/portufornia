@@ -1,5 +1,5 @@
 module.exports = {
-  content: ["./*.html"],
+  content: ["./camz/*.html"],
   theme: {
     fontFamily: {
       originalSurfer: ["Original Surfer", "sans-serif"],
