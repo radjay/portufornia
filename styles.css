@@ -1,3 +1,135 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #010409;
+  color: #f0f6fc;
+}
+
+.pageWrapper {
+  position: relative;
+}
+
+body:before {
+  content: " ";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.1;
+  background-image: url("./images/ocean-2.jpg");
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: cover;
+}
+
+.pageContent {
+  position: relative;
+}
+
+header,
+footer {
+  text-align: center;
+  color: #8b949e;
+}
+
+.playersContainer {
+  display: flex;
+  flex-direction: row;
+  grid-gap: 1px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.playerWrapper {
+  width: 50vw;
+  max-width: 500px;
+  margin-bottom: 0;
+  position: relative;
+  padding: 0;
+}
+.playerWrapper:hover {
+  cursor: pointer;
+}
+.player {
+  width: 100%;
+}
+.titleWrapper {
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 8px;
+  align-items: flex-end;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #00000099;
+  padding: 12px 16px 0px;
+}
+
+.titleWrapper > h3,
+.titleWrapper > h4 {
+  margin: 0 0 8px 0;
+}
+
+.titleWrapper > h3 {
+  font-weight: 500;
+}
+
+.titleWrapper > h4 {
+  color: #ffffff66;
+  font-weight: 400;
+}
+
+.playerWrapper.focused {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  align-items: center;
+  display: flex;
+  background-color: #161b22ee;
+  z-index: 12345;
+}
+
+.playerWrapper.focused > .titleWrapper {
+  display: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .playerWrapper {
+    width: 100%;
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    border-bottom: 1px solid #21262d;
+    border-radius: 0;
+  }
+}
+
+.playerWrapper {
+  position: relative;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+}
