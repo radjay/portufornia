@@ -1,6 +1,10 @@
 .DS_Store
 node_modules/
-dist/
+# Don't ignore the entire dist directory
+# dist/
+# But do ignore other contents of dist except output.css
+dist/*
+!dist/output.css
 .env
 *.log
 npm-debug.log*
