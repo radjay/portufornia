@@ -125,7 +125,7 @@ const renderSpots = (mode) => {
       const titleWrapperEl = document.createElement("div");
       titleWrapperEl.appendChild(titleEl);
       titleWrapperEl.appendChild(subTitleEl);
-      titleWrapperEl.setAttribute("class", "titleWrapper");
+      titleWrapperEl.setAttribute("class", "titleWrapper backdrop-blur-md");
 
       wrapperEl.appendChild(titleWrapperEl);
       wrapperEl.appendChild(playerEl);

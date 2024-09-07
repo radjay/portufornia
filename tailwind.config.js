@@ -6,6 +6,7 @@ module.exports = {
     },
     extend: {},
   },
+  safelist: ["backdrop-blur-md", "backdrop-blur-lg"],
   daisyui: {
     themes: ["light", "dark", "cupcake"],
   },
