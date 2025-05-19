@@ -3,10 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Camz!</title>
+    <title>Psyched!</title>
 
-    <!-- Link to external CSS file -->
+    <!-- Link to external CSS files -->
     <link href="../dist/output.css" rel="stylesheet" />
+    <link href="../css/cams.css" rel="stylesheet" />
+
     <script
       src="https://code.jquery.com/jquery-3.7.0.min.js"
       integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
@@ -16,12 +18,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
+    <!-- Font Awesome for icons -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Original+Surfer&display=swap"
       rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
     <!-- Google tag (gtag.js) -->
     <script
@@ -38,37 +41,75 @@
       gtag("config", "G-7G8CTBSG2L");
     </script>
   </head>
-  <body class="min-h-screen">
-    <div class="pageWrapper">
-      <div class="pageContent">
-        <header
-          class="max-w-screen-lg mx-auto p-2 flex justify-between items-center"
-        >
-          <h1
-            class="text-3xl font-originalSurfer text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 p-2"
-          >
-            Camz!
-          </h1>
-          <nav id="modeSelector" class="flex flex-row justify-end gap-1">
-            <a data-mode="surf" class="btn btn-sm btn-accent">🏄‍♂️ Surf</a>
-            <a data-mode="kite" class="btn btn-sm">🌬️ Wind</a>
-          </nav>
-        </header>
+  <body
+    class="bg-[#121212] bg-gradient-to-b from-[#121212] to-[#161616] text-white font-sans antialiased min-h-screen"
+  >
+    <div class="min-h-screen">
+      <header
+        id="mainHeader"
+        class="bg-[#1e1e1e] shadow border-b border-white/10 py-2 flex items-center backdrop-blur-md relative z-10 transition-all duration-300 ease-in-out"
+      >
+        <div class="w-full px-6 flex items-center justify-between">
+          <img
+            src="stokecam.svg"
+            alt="Stokecam"
+            class="h-6 brightness-0 invert mr-4"
+          />
+          <div class="flex items-center flex-shrink-0">
+            <div class="relative inline-flex items-center mr-3">
+              <select
+                id="modeSelect"
+                class="dropdown-select bg-[#2e2e2e] text-white border border-white/10 rounded-md py-1 px-3 text-sm cursor-pointer appearance-none pr-7 min-w-[80px] text-left hover:border-white/15 hover:bg-[#363636] focus:outline-none focus:ring-2 focus:ring-[#5e6ad2]/50"
+              >
+                <option value="all">All Sports</option>
+                <option value="surf">Surf Only</option>
+                <option value="kite">Kite Only</option>
+              </select>
+            </div>
+            <div class="relative inline-flex items-center">
+              <select
+                id="columnsSelect"
+                class="dropdown-select bg-[#2e2e2e] text-white border border-white/10 rounded-md py-1 px-3 text-sm cursor-pointer appearance-none pr-7 min-w-[80px] text-left hover:border-white/15 hover:bg-[#363636] focus:outline-none focus:ring-2 focus:ring-[#5e6ad2]/50"
+              >
+                <option value="4">4 Columns</option>
+                <option value="3">3 Columns</option>
+                <option value="2">2 Columns</option>
+                <option value="1">1 Column</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </header>
 
-        <main>
-          <!-- Main content goes here -->
-          <div id="players" class="playersContainer"></div>
-        </main>
+      <main class="w-full p-0 relative z-1">
+        <div
+          id="playersContainer"
+          class="playersContainer grid-cols-4 grid relative w-full transition-colors"
+        ></div>
+      </main>
 
-        <footer
-          class="flex justify-center items-center p-6 text-sm text-gray-500"
-        >
-          <!-- Footer content goes here -->
-          <p>A project by Portufornia Labs</p>
-        </footer>
-      </div>
+      <footer class="py-6 text-center">
+        <div class="text-sm text-white/75 mb-4">
+          <p>
+            ©2025
+            <a
+              href="https://portufornia.com"
+              class="text-[#5e6ad2] no-underline hover:text-[#4f58c2] hover:underline transition-colors"
+              >Portufornia</a
+            >
+            — Webcams from
+            <a
+              href="https://www.playocean.net/en/"
+              target="_blank"
+              class="text-[#5e6ad2] no-underline hover:text-[#4f58c2] hover:underline transition-colors"
+              >Play Ocean</a
+            >
+          </p>
+        </div>
+      </footer>
     </div>
 
+    <!-- External JavaScript file -->
     <script src="../js/main.js"></script>
   </body>
 </html>

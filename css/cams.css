@@ -2,134 +2,158 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: "Poppins", sans-serif;
-  background-color: #010409;
-  color: #f0f6fc;
+/* Custom styles that are difficult to represent with Tailwind */
+
+/* Utility classes for JavaScript functionality */
+.header-hidden {
+  @apply opacity-0 pointer-events-none invisible;
 }
 
-.pageWrapper {
-  position: relative;
-}
-
-body:before {
-  content: " ";
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0.1;
-  background-image: url("./images/ocean-2.jpg");
-  background-repeat: no-repeat;
-  background-position: 50% 0;
-  background-size: cover;
-}
-
-.pageContent {
-  position: relative;
-}
-
-header,
-footer {
-  text-align: center;
-  color: #8b949e;
-}
-
-.playersContainer {
-  display: flex;
-  flex-direction: row;
-  grid-gap: 1px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.playerWrapper {
-  width: 50vw;
-  max-width: 500px;
-  margin-bottom: 0;
-  position: relative;
-  padding: 0;
-}
-.playerWrapper:hover {
-  cursor: pointer;
-}
-.player {
-  width: 100%;
-}
-.titleWrapper {
-  display: flex;
-  justify-content: space-between;
-  padding: 0px 8px;
-  align-items: flex-end;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  background-color: #20383988;
-  padding: 12px 16px 0px;
-}
-
-.titleWrapper > h3,
-.titleWrapper > h4 {
-  margin: 0 0 8px 0;
-}
-
-.titleWrapper > h3 {
-  font-weight: 500;
-}
-
-.titleWrapper > h4 {
-  color: #ffffff66;
-  font-weight: 400;
-}
-
+/* Focused (fullscreen) player styles */
 .playerWrapper.focused {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  max-width: 100%;
-  padding: 0;
-  align-items: center;
-  display: flex;
-  background-color: #161b22ee;
-  z-index: 12345;
+  @apply fixed inset-0 w-full h-full z-50 rounded-none shadow-none border-0 transform-none flex items-center justify-center bg-black/95 overflow-hidden;
 }
 
-.playerWrapper.focused > .titleWrapper {
+.playerWrapper.focused .mediaContainer {
+  @apply h-full w-full flex items-center justify-center;
+  aspect-ratio: unset;
+}
+
+.playerWrapper.focused .player {
+  @apply h-full w-full max-h-screen max-w-full object-contain bg-transparent;
+}
+
+.playerWrapper.focused .placeholder {
+  @apply h-full bg-black/90;
+}
+
+/* Player and media container styles */
+.player {
+}
+
+.mediaContainer {
+  @apply overflow-hidden relative h-full w-full;
+}
+
+.mediaContainer::after {
+  content: attr(data-spot-name);
+  @apply absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-sm text-white text-sm py-2 px-3 opacity-0 transition-opacity duration-300;
+}
+
+.sports-icons {
+  @apply absolute bottom-0 right-3 py-2 opacity-0 transition-opacity duration-300 flex items-center gap-2 z-10;
+}
+
+.sport-icon {
+  @apply w-4 h-4 bg-contain bg-no-repeat bg-center opacity-75;
+  filter: invert(1);
+}
+
+.sport-icon[data-sport="surf"] {
+  background-image: url("../assets/icons/icon-surfboard.svg");
+}
+
+.sport-icon[data-sport="kite"] {
+  background-image: url("../assets/icons/icon-kitesurf.svg");
+}
+
+.sport-icon[data-sport="windsurf"] {
+  background-image: url("../assets/icons/icon-windsurf.svg");
+}
+
+.sport-icon[data-sport="wing"] {
+  background-image: url("../assets/icons/icon-wing.svg");
+}
+
+.mediaContainer:hover::after,
+.mediaContainer:hover .sports-icons {
+  @apply opacity-100;
+}
+
+/* Hide spot name and icons for offline cameras */
+.mediaContainer:has(.placeholder)::after,
+.mediaContainer:has(.placeholder) .sports-icons {
   display: none;
 }
 
-@media only screen and (max-width: 600px) {
-  .playerWrapper {
-    width: 100%;
-    background-color: transparent;
-    padding: 0;
-    border: none;
-    border-bottom: 1px solid #21262d;
-    border-radius: 0;
+/* Ensure placeholder is centered and has reduced opacity */
+.placeholder {
+  @apply absolute inset-0 flex items-center justify-center opacity-50;
+}
+
+/* Custom play button styles */
+.play-button {
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/65 border-0 text-white w-12 h-12 rounded-full cursor-pointer flex items-center justify-center shadow-md z-10 text-xl;
+}
+
+.play-button:hover {
+  @apply bg-black/80 scale-105;
+}
+
+.playerWrapper.focused .play-button {
+  @apply w-16 h-16 text-2xl;
+}
+
+/* Custom close button styles */
+.close-button {
+  @apply absolute top-4 right-4 bg-black/50 backdrop-blur border-0 w-9 h-9 rounded-full hidden items-center justify-center cursor-pointer z-[1100] text-white transition-colors;
+  display: none !important;
+}
+
+.close-button:hover {
+  @apply bg-black/70;
+}
+
+.playerWrapper.focused .close-button {
+  @apply flex !important;
+  display: flex !important;
+}
+
+/* Modal open state for body */
+body.modal-open {
+  @apply overflow-hidden;
+}
+
+/* Custom hover effects for player wrappers */
+.playerWrapper:hover {
+  @apply shadow-lg border-white/25 cursor-pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Dropdown custom arrow styling that's hard to do in Tailwind */
+select.dropdown-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255, 255, 255, 0.6)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  padding-right: 1.75rem !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  .playersContainer.grid-cols-3,
+  .playersContainer.grid-cols-4,
+  .playersContainer.grid-cols-5,
+  .playersContainer.grid-cols-6 {
+    @apply grid-cols-2;
+  }
+
+  select.dropdown-select {
+    @apply min-w-[70px] py-0.5 pr-6 bg-right;
+    background-position: right 0.25rem center;
   }
 }
 
-.playerWrapper {
-  position: relative;
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-width: 920px) {
+  .close-button {
+    @apply top-3 right-3;
+  }
 }
 
-.play-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 24px;
-  cursor: pointer;
-  z-index: 10;
+/* Custom fullscreen player style */
+.fullscreen-player {
+  @apply w-full h-full object-contain block bg-transparent;
 }
