@@ -561,9 +561,17 @@ $(document).ready(function () {
   });
 
   const columnsSelect = document.getElementById("columnsSelect");
-  const savedColumns = localStorage.getItem("columns") || "4";
-  columnsSelect.value = savedColumns;
-  updateColumns(savedColumns);
+  const savedColumns = localStorage.getItem("columns");
+
+  // Set default columns based on screen size if no saved preference
+  if (!savedColumns) {
+    const defaultColumns = window.innerWidth < 768 ? "1" : "3";
+    columnsSelect.value = defaultColumns;
+    updateColumns(defaultColumns);
+  } else {
+    columnsSelect.value = savedColumns;
+    updateColumns(savedColumns);
+  }
 
   columnsSelect.addEventListener("change", function () {
     const newColumns = this.value;
