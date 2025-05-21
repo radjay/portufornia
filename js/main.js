@@ -5,6 +5,7 @@ const spots = [
     streamId: "5fcf6d21-f52c-422a-3035-3530-6d61-63-98fa-626cced74f41d",
     region: "Linha",
     sports: ["surf"],
+    streamSource: "quanteec",
   },
   {
     town: "Carcavelos",
@@ -12,6 +13,7 @@ const spots = [
     streamId: "7dbfbd58-2c72-4c87-3135-3530-6d61-63-a1b9-8dc2ff272a5cd",
     region: "Linha",
     sports: ["surf", "kite"],
+    streamSource: "quanteec",
   },
   {
     town: "Guincho",
@@ -19,6 +21,7 @@ const spots = [
     streamId: "61f5d898-0c04-4515-3934-3530-6d61-63-87e5-3432badee226d",
     region: "Cascais",
     sports: ["surf", "windsurf", "kite", "wing"],
+    streamSource: "quanteec",
   },
   {
     town: "Guincho",
@@ -26,6 +29,7 @@ const spots = [
     streamId: "8d2e5d1c-5771-49c8-3834-3530-6d61-63-a417-988a6df6a2f2d",
     region: "Cascais",
     sports: ["surf", "windsurf", "kite", "wing"],
+    streamSource: "quanteec",
   },
   {
     town: "Caparica",
@@ -33,6 +37,7 @@ const spots = [
     streamId: "f829148a-5ae5-4a90-3735-3530-6d61-63-b215-b6a95fb68802d",
     region: "Almada",
     sports: ["surf"],
+    streamSource: "quanteec",
   },
   {
     town: "Caparica",
@@ -40,6 +45,7 @@ const spots = [
     streamId: "b969e298-ceb4-4132-3635-3530-6d61-63-82b6-c59507e55b39d",
     region: "Almada",
     sports: ["surf"],
+    streamSource: "quanteec",
   },
   {
     town: "Caparica",
@@ -47,6 +53,7 @@ const spots = [
     streamId: "033c1cda-143d-4a55-3835-3530-6d61-63-a933-f44c0821ad62d",
     region: "Almada",
     sports: ["surf"],
+    streamSource: "quanteec",
   },
   {
     town: "Fonte da Telha",
@@ -54,6 +61,7 @@ const spots = [
     streamId: "a31a9026-5ced-4668-3935-3530-6d61-63-aa32-b07694268059d",
     region: "Almada",
     sports: ["windsurf", "kite", "wing", "surf"],
+    streamSource: "quanteec",
   },
   {
     town: "Colares",
@@ -61,17 +69,35 @@ const spots = [
     streamId: "f05e1d93-57cf-4e07-3734-3530-6d61-63-8b8c-a57a96c1fc1ed",
     region: "Sintra",
     sports: ["surf"],
+    streamSource: "quanteec",
   },
-  // feeds to add:
-  // - https://www.playocean.net/camaras/costa-da-caparica-panoramica
+  {
+    town: "Sesimbra",
+    spot: "Lagoa de Albufeira",
+    streamId:
+      "https://video-auth1.iol.pt/beachcam/bclagoaalbufeira/playlist.m3u8",
+    region: "Sesimbra",
+    sports: ["kite", "windsurf", "wing"],
+    streamSource: "iol",
+  },
+  {
+    town: "Cascais",
+    spot: "Baia de Cascais",
+    streamId:
+      "https://video-auth1.iol.pt/beachcam/praiadospescadores/playlist.m3u8",
+    region: "Cascais",
+    sports: ["windsurf", "wing"],
+    streamSource: "iol",
+  },
 ];
 
 /**
  * Load and initialize HLS stream for a video element
  * @param {string} streamId - The ID of the stream to load
  * @param {HTMLVideoElement} playerEl - The video element to attach the stream to
+ * @param {string} streamSource - The source of the stream (quanteec, iol, etc)
  */
-let loadStream = (streamId, playerEl) => {
+let loadStream = (streamId, playerEl, streamSource) => {
   console.log("Loading stream for:", streamId);
   let isOffline = false;
   const wrapper = $(playerEl).closest(".playerWrapper")[0];
@@ -123,11 +149,22 @@ let loadStream = (streamId, playerEl) => {
   };
   playerEl.addEventListener("loadeddata", loadedDataHandler);
 
-  // these streams can be found on gosurf.fr!
-  const streamUrl =
-    "https://deliverys5.quanteec.com/contents/encodings/live/" +
-    streamId +
-    "/media_0.m3u8";
+  // Get stream URL based on source
+  let streamUrl;
+  switch (streamSource) {
+    case "quanteec":
+      streamUrl =
+        "https://deliverys5.quanteec.com/contents/encodings/live/" +
+        streamId +
+        "/media_0.m3u8";
+      break;
+    case "iol":
+      streamUrl = streamId; // For IOL, the streamId is already the full URL
+      break;
+    default:
+      console.error("Unknown stream source:", streamSource);
+      return;
+  }
 
   playerEl.playsInline = true;
   playerEl.muted = true;
@@ -246,7 +283,7 @@ let loadStream = (streamId, playerEl) => {
 
           // Load the stream for the existing video element
           setTimeout(() => {
-            loadStream(streamId, existingVideoEl);
+            loadStream(streamId, existingVideoEl, streamSource);
           }, 100);
         }
       }
@@ -349,17 +386,23 @@ let renderSpots = (mode) => {
     mediaContainer.append(sportsContainer);
 
     const player = $('<video class="player"></video>');
+    player.attr("data-stream-source", spot.streamSource);
     wrapper.append(mediaContainer);
     mediaContainer.append(player);
-    return { wrapper, player: player[0], streamId: spot.streamId };
+    return {
+      wrapper,
+      player: player[0],
+      streamId: spot.streamId,
+      streamSource: spot.streamSource,
+    };
   });
 
   // Add all wrappers to container
   wrappers.forEach(({ wrapper }) => container.append(wrapper));
 
   // Load streams
-  wrappers.forEach(({ player, streamId }) => {
-    loadStream(streamId, player);
+  wrappers.forEach(({ player, streamId, streamSource }) => {
+    loadStream(streamId, player, streamSource);
   });
 
   // Prevent the click handler from being added multiple times
@@ -631,7 +674,9 @@ $(document).ready(function () {
 
             // Load the stream for the existing video element
             setTimeout(() => {
-              loadStream(streamId, existingVideoEl);
+              const streamSource =
+                existingVideoEl.getAttribute("data-stream-source");
+              loadStream(streamId, existingVideoEl, streamSource);
             }, 100);
           }
         }
