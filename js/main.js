@@ -123,6 +123,7 @@ let loadStream = (streamId, playerEl) => {
   };
   playerEl.addEventListener("loadeddata", loadedDataHandler);
 
+  // these streams can be found on gosurf.fr!
   const streamUrl =
     "https://deliverys5.quanteec.com/contents/encodings/live/" +
     streamId +
@@ -131,13 +132,6 @@ let loadStream = (streamId, playerEl) => {
   playerEl.playsInline = true;
   playerEl.muted = true;
   playerEl.autoplay = true;
-
-  // Create play button
-  const playButton = document.createElement("button");
-  playButton.innerHTML = "▶";
-  playButton.className = "play-button";
-  mediaContainer.appendChild(playButton);
-  playButton.style.display = "none"; // Hide initially as we'll try to autoplay
 
   // Function to start video playback
   const startPlayback = function () {
@@ -162,16 +156,10 @@ let loadStream = (streamId, playerEl) => {
 
       hls.on(Hls.Events.MANIFEST_PARSED, function () {
         console.log("HLS manifest parsed, playing video");
-        playerEl
-          .play()
-          .then(() => {
-            console.log("Playback started successfully");
-            playButton.style.display = "none";
-          })
-          .catch((error) => {
-            console.log("Playback failed:", error);
-            playButton.style.display = "flex";
-          });
+        playerEl.play().catch((error) => {
+          console.log("Playback failed:", error);
+          errorHandler();
+        });
       });
 
       hls.on(Hls.Events.ERROR, function (event, data) {
@@ -201,71 +189,16 @@ let loadStream = (streamId, playerEl) => {
       playerEl.src = streamUrl;
       playerEl.addEventListener("loadedmetadata", function () {
         console.log("Metadata loaded, playing video");
-        playerEl
-          .play()
-          .then(() => {
-            console.log("Playback started successfully");
-            playButton.style.display = "none";
-          })
-          .catch((error) => {
-            console.log("Playback failed:", error);
-            playButton.style.display = "flex";
-          });
+        playerEl.play().catch((error) => {
+          console.log("Playback failed:", error);
+          errorHandler();
+        });
       });
     }
   };
 
   // Start playback immediately
   startPlayback();
-
-  // Add play button functionality
-  playButton.addEventListener("click", function (e) {
-    console.log("Play button clicked");
-    e.stopPropagation();
-    if (playerEl.paused || playerEl.ended) {
-      console.log("Video is paused or ended, attempting to play");
-      // If HLS instance exists but is destroyed, recreate it
-      if (playerEl.hlsInstance && playerEl.hlsInstance.destroyed) {
-        console.log("HLS instance destroyed, recreating");
-        startPlayback();
-      } else {
-        console.log("Using existing HLS instance");
-        playerEl
-          .play()
-          .then(() => {
-            console.log("Playback resumed successfully");
-            playButton.style.display = "none";
-          })
-          .catch((error) => {
-            console.log("Error playing video:", error);
-          });
-      }
-    }
-
-    // If the player is in focused/fullscreen mode, make sure any click on the play button
-    // doesn't cause the parent click event to fire and close the modal
-    const wrapper = $(playerEl).closest(".playerWrapper");
-    if (wrapper.length && wrapper.hasClass("focused")) {
-      console.log("Preventing close on play button click in fullscreen");
-      setTimeout(() => {
-        // Keep modal open and prevent bubbling
-        $("body").addClass("modal-open");
-        e.preventDefault();
-      }, 0);
-    }
-  });
-
-  // Show play button when video is paused
-  playerEl.addEventListener("pause", function () {
-    console.log("Video paused, showing play button");
-    playButton.style.display = "flex";
-  });
-
-  // Hide play button when video is playing
-  playerEl.addEventListener("play", function () {
-    console.log("Video playing, hiding play button");
-    playButton.style.display = "none";
-  });
 
   const closeButton = document.createElement("button");
   closeButton.innerHTML = '<i class="fas fa-times"></i>';
@@ -287,70 +220,34 @@ let loadStream = (streamId, playerEl) => {
       // Show spot headers again when exiting fullscreen
       focusedPlayer.find(".spot-header").show();
 
-      // Restart all grid videos after closing fullscreen
-      const streamId = playerEl.id;
-      const mediaContainer = playerEl.closest(".mediaContainer");
-
       // Handle the case where we might have a replacement video in fullscreen mode
       if (mediaContainer) {
         // Find any video elements in this container
         const existingVideoEl = mediaContainer.querySelector("video.player");
 
-        // If we don't have the original video element, recreate it
-        if (existingVideoEl && existingVideoEl !== playerEl && streamId) {
-          console.log("Recreating original video element after fullscreen");
+        // If we have a video element, restart its stream
+        if (existingVideoEl && streamId) {
+          console.log("Restarting stream after fullscreen");
 
-          // Clean up the fullscreen video player
+          // Clean up the existing HLS instance
           if (existingVideoEl.hlsInstance) {
             try {
               existingVideoEl.hlsInstance.destroy();
+              existingVideoEl.hlsInstance = null;
             } catch (e) {
-              console.error("Error destroying fullscreen HLS:", e);
+              console.error("Error destroying HLS instance:", e);
             }
           }
 
-          // Create new video element to replace the fullscreen one
-          const newVideoEl = document.createElement("video");
-          newVideoEl.id = streamId;
-          newVideoEl.className = "player";
-          newVideoEl.muted = true;
-          newVideoEl.playsInline = true;
-          newVideoEl.autoplay = true;
+          // Reset video element properties
+          existingVideoEl.pause();
+          existingVideoEl.removeAttribute("src");
+          existingVideoEl.load();
 
-          // Replace fullscreen video with new grid video
-          mediaContainer.replaceChild(newVideoEl, existingVideoEl);
-
-          // Set up fresh HLS instance
-          const streamUrl =
-            "https://deliverys5.quanteec.com/contents/encodings/live/" +
-            streamId +
-            "/media_0.m3u8";
-
-          if (Hls.isSupported()) {
-            const hls = new Hls();
-            hls.loadSource(streamUrl);
-            hls.attachMedia(newVideoEl);
-
-            // Store HLS instance on video element
-            newVideoEl.hlsInstance = hls;
-
-            hls.on(Hls.Events.MANIFEST_PARSED, function () {
-              newVideoEl
-                .play()
-                .catch((e) =>
-                  console.log("Error playing video after fullscreen:", e)
-                );
-            });
-          } else if (newVideoEl.canPlayType("application/vnd.apple.mpegurl")) {
-            newVideoEl.src = streamUrl;
-            newVideoEl.addEventListener("loadedmetadata", function () {
-              newVideoEl
-                .play()
-                .catch((e) =>
-                  console.log("Error playing video after fullscreen:", e)
-                );
-            });
-          }
+          // Load the stream for the existing video element
+          setTimeout(() => {
+            loadStream(streamId, existingVideoEl);
+          }, 100);
         }
       }
 
@@ -488,6 +385,13 @@ function setupClickHandlers() {
     .on("click", ".playerWrapper", function (e) {
       // Ignore clicks on the close button or play button (handled separately)
       if ($(e.target).closest(".close-button, .play-button").length) {
+        return;
+      }
+
+      // Check if the camera is offline
+      const mediaContainer = $(this).find(".mediaContainer")[0];
+      if (mediaContainer && mediaContainer.querySelector(".placeholder")) {
+        console.log("Camera is offline, preventing fullscreen");
         return;
       }
 
@@ -685,69 +589,42 @@ $(document).ready(function () {
         // Show spot headers again when exiting fullscreen via ESC key
         focusedPlayer.find(".spot-header").show();
 
+        // Hide the close button when exiting fullscreen
+        const closeButton = focusedPlayer.find(".close-button");
+        if (closeButton.length) {
+          closeButton.removeClass("flex").addClass("hidden");
+          closeButton[0].style.display = "none";
+        }
+
         const streamId = focusedPlayer.find("video.player").attr("id");
         const mediaContainer = focusedPlayer.find(".mediaContainer")[0];
         if (mediaContainer) {
           // Find any video elements in this container
           const existingVideoEl = mediaContainer.querySelector("video.player");
 
-          // Clean up the fullscreen video player and recreate grid video
-          if (existingVideoEl) {
-            console.log("Recreating original video element after ESC");
+          // If we have a video element, restart its stream
+          if (existingVideoEl && streamId) {
+            console.log("Restarting stream after ESC");
 
-            // Clean up HLS instance
+            // Clean up the existing HLS instance
             if (existingVideoEl.hlsInstance) {
               try {
                 existingVideoEl.hlsInstance.destroy();
+                existingVideoEl.hlsInstance = null;
               } catch (e) {
-                console.error("Error destroying fullscreen HLS:", e);
+                console.error("Error destroying HLS instance:", e);
               }
             }
 
-            // Create new video element to replace the fullscreen one
-            const newVideoEl = document.createElement("video");
-            newVideoEl.id = streamId;
-            newVideoEl.className = "player";
-            newVideoEl.muted = true;
-            newVideoEl.playsInline = true;
-            newVideoEl.autoplay = true;
+            // Reset video element properties
+            existingVideoEl.pause();
+            existingVideoEl.removeAttribute("src");
+            existingVideoEl.load();
 
-            // Replace fullscreen video with new grid video
-            mediaContainer.replaceChild(newVideoEl, existingVideoEl);
-
-            // Set up fresh HLS instance
-            const streamUrl =
-              "https://deliverys5.quanteec.com/contents/encodings/live/" +
-              streamId +
-              "/media_0.m3u8";
-
-            if (Hls.isSupported()) {
-              const hls = new Hls();
-              hls.loadSource(streamUrl);
-              hls.attachMedia(newVideoEl);
-
-              // Store HLS instance on video element
-              newVideoEl.hlsInstance = hls;
-
-              hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                newVideoEl
-                  .play()
-                  .catch((e) =>
-                    console.log("Error playing video after ESC:", e)
-                  );
-              });
-            } else if (
-              newVideoEl.canPlayType("application/vnd.apple.mpegurl")
-            ) {
-              newVideoEl.src = streamUrl;
-              newVideoEl.addEventListener("loadedmetadata", function () {
-                newVideoEl
-                  .play()
-                  .catch((e) =>
-                    console.log("Error playing video after ESC:", e)
-                  );
-              });
-            }
+            // Load the stream for the existing video element
+            setTimeout(() => {
+              loadStream(streamId, existingVideoEl);
+            }, 100);
           }
         }
 

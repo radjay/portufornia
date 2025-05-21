@@ -38,22 +38,34 @@
       gtag("config", "G-7G8CTBSG2L");
     </script>
   </head>
-  <body class="min-h-screen">
-    <div class="pageWrapper flex flex-col justify-center items-center h-screen">
-      <h1
-        class="text-3xl font-originalSurfer text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 p-2"
-      >
-        Portufornia
-      </h1>
-      <div class="flex flex-col gap-2 text-center px-6 text-gray-500">
+  <body class="min-h-screen relative bg-black">
+    <div
+      class="absolute inset-0 opacity-30"
+      style="
+        background-image: url('assets/images/portugal-01.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      "
+    ></div>
+    <div class="absolute inset-0 bg-black/30"></div>
+    <div
+      class="pageWrapper flex flex-col justify-center items-center h-screen relative z-10"
+    >
+      <img
+        src="assets/logo-portufornia.svg"
+        alt="Portufornia"
+        class="h-6 brightness-0 invert mb-6"
+      />
+      <div class="flex flex-col gap-2 text-center px-6 text-white/90">
         <p class="text-base">Under construction</p>
-        <p class="text-xs">(Yes, that's so 1999...)</p>
-        <hr class="border-black my-6" />
+        <p class="text-xs text-white/50">(Yes, that's so 1999...)</p>
+        <hr class="border-white/30 my-6" />
         <p class="text-sm">We like hacking on stuff, check out this project:</p>
         <a
           href="./camz/index.html"
-          class="btn btn-neutral px-6 py-3 self-center"
-          >Camz!</a
+          class="px-4 py-2 self-center bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-lg transition-colors duration-200 text-sm mt-3"
+          >StokeCam</a
         >
       </div>
     </div>
