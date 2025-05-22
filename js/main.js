@@ -8,8 +8,16 @@ const spots = [
     streamSource: "quanteec",
   },
   {
+    town: "Estoril",
+    spot: "Praia das Moitas",
+    streamId: "https://video-auth1.iol.pt/beachcam/bctamarizfixa/playlist.m3u8",
+    region: "Linha",
+    sports: ["surf", "wing"],
+    streamSource: "iol",
+  },
+  {
     town: "Carcavelos",
-    spot: "Praia de Carcavelos",
+    spot: "Carcavelos",
     streamId: "7dbfbd58-2c72-4c87-3135-3530-6d61-63-a1b9-8dc2ff272a5cd",
     region: "Linha",
     sports: ["surf", "kite"],
@@ -30,6 +38,23 @@ const spots = [
     region: "Cascais",
     sports: ["surf", "windsurf", "kite", "wing"],
     streamSource: "quanteec",
+  },
+  {
+    town: "Guincho",
+    spot: "Praia da Cresmina",
+    streamId: "https://video-auth1.iol.pt/beachcam/crismina/playlist.m3u8",
+    region: "Cascais",
+    sports: ["surf"],
+    streamSource: "iol",
+  },
+  {
+    town: "Cascais",
+    spot: "Baia de Cascais",
+    streamId:
+      "https://video-auth1.iol.pt/beachcam/praiadospescadores/playlist.m3u8",
+    region: "Cascais",
+    sports: ["windsurf", "wing"],
+    streamSource: "iol",
   },
   {
     town: "Caparica",
@@ -56,19 +81,11 @@ const spots = [
     streamSource: "quanteec",
   },
   {
-    town: "Fonte da Telha",
-    spot: "Praia da Fonte Telha",
+    town: "Caparica",
+    spot: "Fonte da Telha",
     streamId: "a31a9026-5ced-4668-3935-3530-6d61-63-aa32-b07694268059d",
     region: "Almada",
     sports: ["windsurf", "kite", "wing", "surf"],
-    streamSource: "quanteec",
-  },
-  {
-    town: "Colares",
-    spot: "Praia Grande - Sul",
-    streamId: "f05e1d93-57cf-4e07-3734-3530-6d61-63-8b8c-a57a96c1fc1ed",
-    region: "Sintra",
-    sports: ["surf"],
     streamSource: "quanteec",
   },
   {
@@ -81,13 +98,12 @@ const spots = [
     streamSource: "iol",
   },
   {
-    town: "Cascais",
-    spot: "Baia de Cascais",
-    streamId:
-      "https://video-auth1.iol.pt/beachcam/praiadospescadores/playlist.m3u8",
-    region: "Cascais",
-    sports: ["windsurf", "wing"],
-    streamSource: "iol",
+    town: "Colares",
+    spot: "Praia Grande - Sul",
+    streamId: "f05e1d93-57cf-4e07-3734-3530-6d61-63-8b8c-a57a96c1fc1ed",
+    region: "Sintra",
+    sports: ["surf"],
+    streamSource: "quanteec",
   },
 ];
 
@@ -357,7 +373,7 @@ function addLiveIndicator(playerEl) {
 
 /**
  * Render spots into the players container
- * @param {string} mode - The mode to filter spots by (surf/kite)
+ * @param {string} mode - The mode to filter spots by
  */
 let renderSpots = (mode) => {
   const container = $("#playersContainer");
@@ -562,12 +578,12 @@ function updateColumns(columns) {
 
 /**
  * Update the display mode (surf/kite)
- * @param {string} newMode - The new mode to update to
+ * @param {string} mode - The mode to update to
  */
-let updateMode = (newMode) => {
-  console.log(`Switching mode to: ${newMode}`);
-  localStorage.setItem("mode", newMode);
-  renderSpots(newMode);
+let updateMode = (mode) => {
+  console.log(`Switching mode to: ${mode}`);
+  localStorage.setItem("mode", mode);
+  renderSpots(mode);
 };
 
 /**
@@ -576,9 +592,9 @@ let updateMode = (newMode) => {
 $(document).ready(function () {
   // Custom overrides and extensions
   const originalUpdateMode = updateMode;
-  updateMode = function (newMode) {
-    console.log(`Switching mode to: ${newMode}`);
-    originalUpdateMode(newMode);
+  updateMode = function (mode) {
+    console.log(`Switching mode to: ${mode}`);
+    originalUpdateMode(mode);
   };
 
   const originalRenderSpots = renderSpots;
