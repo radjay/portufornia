@@ -714,6 +714,24 @@ function addLiveIndicator(playerEl) {
  */
 let renderSpots = (mode) => {
   const container = $("#playersContainer");
+
+  // First, properly cleanup existing streams
+  container.find("video.player").each(function () {
+    const video = this;
+    if (video.hlsInstance) {
+      try {
+        video.hlsInstance.destroy();
+        video.hlsInstance = null;
+      } catch (e) {
+        console.error("Error destroying HLS instance:", e);
+      }
+    }
+    video.pause();
+    video.removeAttribute("src");
+    video.load();
+  });
+
+  // Clear the container
   container.empty();
 
   // Get ordered spots and then filter by mode
