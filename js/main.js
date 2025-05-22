@@ -55,16 +55,27 @@ function renderSpotsList() {
     scrollSensitivity: 30,
     scrollSpeed: 10,
     connectWith: "#spotsList",
+    handle: ".fa-grip-vertical",
     helper: function (e, item) {
       return $(item).clone();
     },
     start: function (e, ui) {
       ui.placeholder.height(ui.item.height());
+      // Add touch-specific class for better mobile handling
+      $(ui.item).addClass("dragging");
+    },
+    stop: function (e, ui) {
+      // Remove touch-specific class
+      $(ui.item).removeClass("dragging");
     },
     appendTo: spotsList,
     sort: function (e, ui) {
       ui.helper.css("top", ui.helper.position().top - 70);
     },
+    // Add touch-specific options
+    delay: 150,
+    distance: 5,
+    touchStartThreshold: 5,
   });
 }
 

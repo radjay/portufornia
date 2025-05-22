@@ -12,14 +12,31 @@
 /* Spot sorter styles */
 #spotsList {
   @apply space-y-2;
+  -webkit-overflow-scrolling: touch;
 }
 
 #spotsList .spot-item {
   @apply transition-colors duration-150;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#spotsList .spot-item.dragging {
+  @apply bg-[#363636] shadow-lg;
+  opacity: 0.9;
+  transform: scale(1.02);
 }
 
 #spotsList .spot-item .fa-grip-vertical {
   @apply w-4 h-4 flex items-center justify-center;
+  cursor: grab;
+  touch-action: none;
+}
+
+#spotsList .spot-item .fa-grip-vertical:active {
+  cursor: grabbing;
 }
 
 #spotsList .spot-item > div {
@@ -32,6 +49,7 @@
 
 #spotsList .ui-sortable-helper {
   @apply shadow-lg border border-dashed border-white/50 bg-[#363636] w-full;
+  transform: scale(1.02);
 }
 
 #spotsList .ui-sortable-placeholder {

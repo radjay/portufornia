@@ -4,7 +4,23 @@ module.exports = {
     fontFamily: {
       originalSurfer: ["Original Surfer", "sans-serif"],
     },
-    extend: {},
+    extend: {
+      touchAction: {
+        none: "none",
+        auto: "auto",
+        "pan-x": "pan-x",
+        "pan-y": "pan-y",
+        manipulation: "manipulation",
+      },
+      userSelect: {
+        none: "none",
+        text: "text",
+        all: "all",
+      },
+      transform: {
+        "scale-102": "scale(1.02)",
+      },
+    },
   },
   safelist: [
     // Grid columns
@@ -76,10 +92,29 @@ module.exports = {
     "py-2",
     "py-4",
 
+    // Touch and interaction utilities
+    "touch-none",
+    "touch-auto",
+    "touch-pan-x",
+    "touch-pan-y",
+    "touch-manipulation",
+    "select-none",
+    "select-text",
+    "select-all",
+    "cursor-grab",
+    "cursor-grabbing",
+    "scale-102",
+    "opacity-90",
+    "opacity-50",
+    "shadow-lg",
+    "border-dashed",
+    "border-white/50",
+
     // Other utilities
     "overflow-hidden",
     "z-20",
     "z-50",
+    "z-[100]",
     "cursor-pointer",
     "cursor-move",
   ],
