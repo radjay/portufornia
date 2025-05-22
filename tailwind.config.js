@@ -63,6 +63,19 @@ module.exports = {
     "mt-[41px]",
     "md:mt-0",
 
+    // Logo and image sizing
+    "h-6",
+    "w-auto",
+    "brightness-0",
+    "invert",
+
+    // Container and layout
+    "container",
+    "mx-auto",
+    "px-6",
+    "py-2",
+    "py-4",
+
     // Other utilities
     "overflow-hidden",
     "z-20",
