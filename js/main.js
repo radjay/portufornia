@@ -755,10 +755,12 @@ let renderSpots = (mode) => {
   // Add all wrappers to container
   wrappers.forEach(({ wrapper }) => container.append(wrapper));
 
-  // Load streams
-  wrappers.forEach(({ player, streamId, streamSource }) => {
-    loadStream(streamId, player, streamSource);
-  });
+  // Load streams with a small delay to ensure DOM is ready
+  setTimeout(() => {
+    wrappers.forEach(({ player, streamId, streamSource }) => {
+      loadStream(streamId, player, streamSource);
+    });
+  }, 100);
 
   // Prevent the click handler from being added multiple times
   $(".playerWrapper").off("click");
