@@ -49,20 +49,21 @@
     </script>
   </head>
   <body
-    class="bg-[#121212] bg-gradient-to-b from-[#121212] to-[#161616] text-white font-sans antialiased min-h-screen"
+    class="bg-[#121212] bg-gradient-to-b from-[#121212] to-[#161616] text-white font-sans antialiased min-h-screen overflow-x-hidden"
   >
     <div class="min-h-screen">
       <header
         id="mainHeader"
-        class="bg-[#1e1e1e] shadow border-b border-white/10 py-2 flex items-center backdrop-blur-md relative z-10 transition-all duration-300 ease-in-out"
+        class="bg-[#1e1e1e] shadow border-b border-white/10 py-2 flex items-center backdrop-blur-md relative z-10 transition-all duration-300 ease-in-out md:relative fixed top-0 left-0 right-0"
       >
-        <div class="w-full px-6 flex items-center justify-between">
+        <div class="container mx-auto px-6 flex items-center justify-between">
           <img
             src="../assets/logo-stokecam.svg"
             alt="Stokecam"
             class="h-6 brightness-0 invert mr-4"
           />
-          <div class="flex items-center flex-shrink-0">
+          <!-- Desktop controls -->
+          <div class="hidden md:flex items-center flex-shrink-0">
             <div class="relative inline-flex items-center mr-3">
               <select
                 id="modeSelect"
@@ -93,14 +94,73 @@
               <i class="fas fa-arrows-alt-v mr-1"></i>Edit spots
             </button>
           </div>
+          <!-- Mobile edit button -->
+          <button
+            id="mobileEditBtn"
+            class="md:hidden bg-[#2e2e2e] text-white border border-white/10 rounded-md py-1 px-3 text-sm cursor-pointer hover:border-white/15 hover:bg-[#363636] focus:outline-none focus:ring-2 focus:ring-[#5e6ad2]/50"
+          >
+            <i class="fas fa-bars mr-1"></i>Edit
+          </button>
+        </div>
+        <!-- Mobile menu -->
+        <div
+          id="mobileMenu"
+          class="md:hidden fixed top-[41px] left-0 right-0 bg-[#1e1e1e] shadow-lg transform -translate-y-full transition-transform duration-300 ease-in-out z-20 opacity-0 pointer-events-none"
+        >
+          <div class="container mx-auto px-6 py-4 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-white font-medium">Settings</h3>
+              <button
+                id="closeMobileMenu"
+                class="text-white/60 hover:text-white"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm text-white/60 mb-1">Sports</label>
+                <select
+                  id="mobileModeSelect"
+                  class="w-full dropdown-select bg-[#2e2e2e] text-white border border-white/10 rounded-md py-2 px-3 text-sm cursor-pointer appearance-none pr-7 hover:border-white/15 hover:bg-[#363636] focus:outline-none focus:ring-2 focus:ring-[#5e6ad2]/50"
+                >
+                  <option value="all">All Sports</option>
+                  <option value="surf">Surf</option>
+                  <option value="kite">Kitesurf</option>
+                  <option value="windsurf">Windsurf</option>
+                  <option value="wing">Wingfoil</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm text-white/60 mb-1">Columns</label>
+                <select
+                  id="mobileColumnsSelect"
+                  class="w-full dropdown-select bg-[#2e2e2e] text-white border border-white/10 rounded-md py-2 px-3 text-sm cursor-pointer appearance-none pr-7 hover:border-white/15 hover:bg-[#363636] focus:outline-none focus:ring-2 focus:ring-[#5e6ad2]/50"
+                >
+                  <option value="4">4 Columns</option>
+                  <option value="3">3 Columns</option>
+                  <option value="2">2 Columns</option>
+                  <option value="1">1 Column</option>
+                </select>
+              </div>
+              <button
+                id="mobileEditSpotsBtn"
+                class="w-full bg-[#2e2e2e] text-white border border-white/10 rounded-md py-2 px-3 text-sm cursor-pointer hover:border-white/15 hover:bg-[#363636] focus:outline-none focus:ring-2 focus:ring-[#5e6ad2]/50"
+              >
+                <i class="fas fa-arrows-alt-v mr-1"></i>Edit spots order
+              </button>
+            </div>
+          </div>
         </div>
       </header>
 
-      <main class="w-full p-0 relative z-1">
-        <div
-          id="playersContainer"
-          class="playersContainer grid-cols-4 grid relative w-full transition-colors"
-        ></div>
+      <main class="w-full relative z-1 md:mt-0">
+        <div class="container mx-auto">
+          <div
+            id="playersContainer"
+            class="playersContainer grid-cols-4 grid relative w-full transition-colors -mt-[1px]"
+          ></div>
+        </div>
       </main>
 
       <footer class="py-6 text-center">

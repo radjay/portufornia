@@ -122,6 +122,217 @@ $(document).ready(function () {
       closeEditSpotsModal();
     }
   });
+
+  // Custom overrides and extensions
+  const originalUpdateMode = updateMode;
+  updateMode = function (mode) {
+    console.log(`Switching mode to: ${mode}`);
+    originalUpdateMode(mode);
+  };
+
+  const originalRenderSpots = renderSpots;
+  renderSpots = function (mode) {
+    console.log(`Rendering spots for mode: ${mode}`);
+    originalRenderSpots(mode);
+
+    // Prevent the click handler from main.js and use our own
+    $(".playerWrapper").off("click");
+
+    // Ensure our click handlers are set up correctly
+    setupClickHandlers();
+  };
+
+  // Mobile menu functionality
+  const mobileMenu = $("#mobileMenu");
+  const mobileEditBtn = $("#mobileEditBtn");
+  const closeMobileMenu = $("#closeMobileMenu");
+  const mobileModeSelect = $("#mobileModeSelect");
+  const mobileColumnsSelect = $("#mobileColumnsSelect");
+  const mobileEditSpotsBtn = $("#mobileEditSpotsBtn");
+
+  // Ensure mobile menu starts hidden
+  mobileMenu.addClass("-translate-y-full opacity-0 pointer-events-none");
+
+  // Sync mobile selects with desktop selects
+  mobileModeSelect.val($("#modeSelect").val());
+  mobileColumnsSelect.val($("#columnsSelect").val());
+
+  // Mobile menu open/close
+  mobileEditBtn.on("click", function (e) {
+    e.stopPropagation();
+    if (mobileMenu.hasClass("-translate-y-full")) {
+      mobileMenu.removeClass("-translate-y-full opacity-0 pointer-events-none");
+      $("body").addClass("overflow-hidden");
+    } else {
+      mobileMenu.addClass("-translate-y-full opacity-0 pointer-events-none");
+      $("body").removeClass("overflow-hidden");
+    }
+  });
+
+  closeMobileMenu.on("click", function () {
+    mobileMenu.addClass("-translate-y-full opacity-0 pointer-events-none");
+    $("body").removeClass("overflow-hidden");
+  });
+
+  // Sync mobile mode select with desktop
+  mobileModeSelect.on("change", function () {
+    const newMode = this.value;
+    $("#modeSelect").val(newMode);
+    localStorage.setItem("mode", newMode);
+    updateMode(newMode);
+  });
+
+  // Sync mobile columns select with desktop
+  mobileColumnsSelect.on("change", function () {
+    const newColumns = this.value;
+    $("#columnsSelect").val(newColumns);
+    updateColumns(newColumns);
+  });
+
+  // Sync mobile edit spots button with desktop
+  mobileEditSpotsBtn.on("click", function () {
+    renderSpotsList();
+    $("#editSpotsModal").removeClass("hidden");
+    mobileMenu.addClass("-translate-y-full");
+    $("body").removeClass("overflow-hidden");
+  });
+
+  // Close mobile menu when clicking outside
+  $(document).on("click", function (e) {
+    if (
+      !mobileMenu.is(e.target) &&
+      mobileMenu.has(e.target).length === 0 &&
+      !mobileEditBtn.is(e.target) &&
+      !mobileMenu.hasClass("-translate-y-full")
+    ) {
+      mobileMenu.addClass("-translate-y-full opacity-0 pointer-events-none");
+      $("body").removeClass("overflow-hidden");
+    }
+  });
+
+  // Close mobile menu on escape key
+  $(document).on("keydown", function (e) {
+    if (e.key === "Escape" && !mobileMenu.hasClass("-translate-y-full")) {
+      mobileMenu.addClass("-translate-y-full opacity-0 pointer-events-none");
+      $("body").removeClass("overflow-hidden");
+    }
+  });
+
+  const modeSelect = document.getElementById("modeSelect");
+  const currentMode = localStorage.getItem("mode") || "all";
+  modeSelect.value = currentMode;
+  mobileModeSelect.val(currentMode);
+
+  modeSelect.addEventListener("change", function () {
+    const newMode = this.value;
+    mobileModeSelect.val(newMode);
+    localStorage.setItem("mode", newMode);
+    updateMode(newMode);
+  });
+
+  const columnsSelect = document.getElementById("columnsSelect");
+  const savedColumns = localStorage.getItem("columns");
+
+  // Set default columns based on screen size if no saved preference
+  if (!savedColumns) {
+    const defaultColumns = window.innerWidth < 768 ? "1" : "3";
+    columnsSelect.value = defaultColumns;
+    mobileColumnsSelect.val(defaultColumns);
+    updateColumns(defaultColumns);
+  } else {
+    columnsSelect.value = savedColumns;
+    mobileColumnsSelect.val(savedColumns);
+    updateColumns(savedColumns);
+  }
+
+  columnsSelect.addEventListener("change", function () {
+    const newColumns = this.value;
+    mobileColumnsSelect.val(newColumns);
+    updateColumns(newColumns);
+  });
+
+  // Set up click handlers
+  setupClickHandlers();
+
+  // Initialize app with current settings
+  renderSpots(currentMode);
+
+  $(document).on("keydown", function (e) {
+    if (e.key === "Escape" || e.keyCode === 27) {
+      const focusedPlayer = $(".playerWrapper.focused");
+      if (focusedPlayer.length) {
+        console.log("ESC pressed, closing fullscreen");
+        focusedPlayer.removeClass("focused");
+        $("body").removeClass("modal-open");
+        const header = document.getElementById("mainHeader");
+        if (header) header.classList.remove("header-hidden");
+
+        // Show spot headers again when exiting fullscreen via ESC key
+        focusedPlayer.find(".spot-header").show();
+
+        // Hide the close button when exiting fullscreen
+        const closeButton = focusedPlayer.find(".close-button");
+        if (closeButton.length) {
+          closeButton.removeClass("flex").addClass("hidden");
+          closeButton[0].style.display = "none";
+        }
+
+        const streamId = focusedPlayer.find("video.player").attr("id");
+        const mediaContainer = focusedPlayer.find(".mediaContainer")[0];
+        if (mediaContainer) {
+          // Find any video elements in this container
+          const existingVideoEl = mediaContainer.querySelector("video.player");
+
+          // If we have a video element, restart its stream
+          if (existingVideoEl && streamId) {
+            console.log("Restarting stream after ESC");
+
+            // Clean up the existing HLS instance
+            if (existingVideoEl.hlsInstance) {
+              try {
+                existingVideoEl.hlsInstance.destroy();
+                existingVideoEl.hlsInstance = null;
+              } catch (e) {
+                console.error("Error destroying HLS instance:", e);
+              }
+            }
+
+            // Reset video element properties
+            existingVideoEl.pause();
+            existingVideoEl.removeAttribute("src");
+            existingVideoEl.load();
+
+            // Load the stream for the existing video element
+            setTimeout(() => {
+              const streamSource =
+                existingVideoEl.getAttribute("data-stream-source");
+              loadStream(streamId, existingVideoEl, streamSource);
+            }, 100);
+          }
+        }
+
+        // Resume all grid videos
+        console.log("Resuming all videos after ESC pressed");
+        $("video.player").each(function () {
+          if (this.paused) {
+            this.muted = true; // Ensure muted for autoplay
+            console.log("Resuming video:", this.id);
+            this.play().catch((e) =>
+              console.log("Error resuming after ESC:", e)
+            );
+          }
+        });
+      }
+    }
+  });
+
+  window.addEventListener("orientationchange", function () {
+    if ($(".playerWrapper.focused").length) {
+      setTimeout(function () {
+        window.scrollTo(0, 0);
+      }, 200);
+    }
+  });
 });
 
 const spots = [
@@ -596,9 +807,12 @@ function setupClickHandlers() {
         $(this).removeClass("focused");
         $("body").removeClass("modal-open");
         const header = document.getElementById("mainHeader");
-        if (header) header.classList.remove("header-hidden");
+        if (header) {
+          header.classList.remove("header-hidden");
+          header.style.display = "flex";
+        }
 
-        // Show the spot header when exiting fullscreen
+        // Show spot headers again when exiting fullscreen
         $(this).find(".spot-header").show();
 
         // Hide the close button when exiting fullscreen
@@ -649,7 +863,10 @@ function setupClickHandlers() {
         $(this).addClass("focused");
         $("body").addClass("modal-open");
         const header = document.getElementById("mainHeader");
-        if (header) header.classList.add("header-hidden");
+        if (header) {
+          header.classList.add("header-hidden");
+          header.style.display = "none";
+        }
 
         // Hide the spot header when in fullscreen mode
         $(this).find(".spot-header").hide();
@@ -713,141 +930,6 @@ let updateMode = (mode) => {
   localStorage.setItem("mode", mode);
   renderSpots(mode);
 };
-
-/**
- * Initialize the application when DOM is ready
- */
-$(document).ready(function () {
-  // Custom overrides and extensions
-  const originalUpdateMode = updateMode;
-  updateMode = function (mode) {
-    console.log(`Switching mode to: ${mode}`);
-    originalUpdateMode(mode);
-  };
-
-  const originalRenderSpots = renderSpots;
-  renderSpots = function (mode) {
-    console.log(`Rendering spots for mode: ${mode}`);
-    originalRenderSpots(mode);
-
-    // Prevent the click handler from main.js and use our own
-    $(".playerWrapper").off("click");
-
-    // Ensure our click handlers are set up correctly
-    setupClickHandlers();
-  };
-
-  const modeSelect = document.getElementById("modeSelect");
-  const currentMode = localStorage.getItem("mode") || "all";
-  modeSelect.value = currentMode;
-
-  modeSelect.addEventListener("change", function () {
-    const newMode = this.value;
-    localStorage.setItem("mode", newMode);
-    updateMode(newMode);
-  });
-
-  const columnsSelect = document.getElementById("columnsSelect");
-  const savedColumns = localStorage.getItem("columns");
-
-  // Set default columns based on screen size if no saved preference
-  if (!savedColumns) {
-    const defaultColumns = window.innerWidth < 768 ? "1" : "3";
-    columnsSelect.value = defaultColumns;
-    updateColumns(defaultColumns);
-  } else {
-    columnsSelect.value = savedColumns;
-    updateColumns(savedColumns);
-  }
-
-  columnsSelect.addEventListener("change", function () {
-    const newColumns = this.value;
-    updateColumns(newColumns);
-  });
-
-  // Set up click handlers
-  setupClickHandlers();
-
-  // Initialize app with current settings
-  renderSpots(currentMode);
-
-  $(document).on("keydown", function (e) {
-    if (e.key === "Escape" || e.keyCode === 27) {
-      const focusedPlayer = $(".playerWrapper.focused");
-      if (focusedPlayer.length) {
-        console.log("ESC pressed, closing fullscreen");
-        focusedPlayer.removeClass("focused");
-        $("body").removeClass("modal-open");
-        const header = document.getElementById("mainHeader");
-        if (header) header.classList.remove("header-hidden");
-
-        // Show spot headers again when exiting fullscreen via ESC key
-        focusedPlayer.find(".spot-header").show();
-
-        // Hide the close button when exiting fullscreen
-        const closeButton = focusedPlayer.find(".close-button");
-        if (closeButton.length) {
-          closeButton.removeClass("flex").addClass("hidden");
-          closeButton[0].style.display = "none";
-        }
-
-        const streamId = focusedPlayer.find("video.player").attr("id");
-        const mediaContainer = focusedPlayer.find(".mediaContainer")[0];
-        if (mediaContainer) {
-          // Find any video elements in this container
-          const existingVideoEl = mediaContainer.querySelector("video.player");
-
-          // If we have a video element, restart its stream
-          if (existingVideoEl && streamId) {
-            console.log("Restarting stream after ESC");
-
-            // Clean up the existing HLS instance
-            if (existingVideoEl.hlsInstance) {
-              try {
-                existingVideoEl.hlsInstance.destroy();
-                existingVideoEl.hlsInstance = null;
-              } catch (e) {
-                console.error("Error destroying HLS instance:", e);
-              }
-            }
-
-            // Reset video element properties
-            existingVideoEl.pause();
-            existingVideoEl.removeAttribute("src");
-            existingVideoEl.load();
-
-            // Load the stream for the existing video element
-            setTimeout(() => {
-              const streamSource =
-                existingVideoEl.getAttribute("data-stream-source");
-              loadStream(streamId, existingVideoEl, streamSource);
-            }, 100);
-          }
-        }
-
-        // Resume all grid videos
-        console.log("Resuming all videos after ESC pressed");
-        $("video.player").each(function () {
-          if (this.paused) {
-            this.muted = true; // Ensure muted for autoplay
-            console.log("Resuming video:", this.id);
-            this.play().catch((e) =>
-              console.log("Error resuming after ESC:", e)
-            );
-          }
-        });
-      }
-    }
-  });
-
-  window.addEventListener("orientationchange", function () {
-    if ($(".playerWrapper.focused").length) {
-      setTimeout(function () {
-        window.scrollTo(0, 0);
-      }, 200);
-    }
-  });
-});
 
 // Stream sources:
 //
