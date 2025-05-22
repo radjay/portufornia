@@ -8,13 +8,6 @@
     <!-- Link to external CSS files -->
     <link href="../dist/output.css" rel="stylesheet" />
     <link href="../css/cams.css" rel="stylesheet" />
-
-    <script
-      src="https://code.jquery.com/jquery-3.7.0.min.js"
-      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,6 +19,20 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
+    <!-- jQuery UI CSS -->
+    <link
+      href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"
+      rel="stylesheet"
+    />
+
+    <!-- Scripts -->
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <!-- Google tag (gtag.js) -->
     <script
       async
@@ -79,6 +86,12 @@
                 <option value="1">1 Column</option>
               </select>
             </div>
+            <button
+              id="editSpotsBtn"
+              class="ml-3 bg-[#2e2e2e] text-white border border-white/10 rounded-md py-1 px-3 text-sm cursor-pointer hover:border-white/15 hover:bg-[#363636] focus:outline-none focus:ring-2 focus:ring-[#5e6ad2]/50"
+            >
+              <i class="fas fa-arrows-alt-v mr-1"></i>Edit spots
+            </button>
           </div>
         </div>
       </header>
@@ -106,5 +119,50 @@
 
     <!-- External JavaScript file -->
     <script src="../js/main.js"></script>
+
+    <!-- Edit spots modal -->
+    <div
+      id="editSpotsModal"
+      class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden"
+    >
+      <div class="min-h-screen px-4 text-center">
+        <div class="fixed inset-0" aria-hidden="true">
+          <div class="absolute inset-0 bg-black/80"></div>
+        </div>
+        <span class="inline-block h-screen align-middle" aria-hidden="true"
+          >&#8203;</span
+        >
+        <div
+          class="inline-block w-full max-w-md p-6 my-8 text-left align-middle transition-all transform bg-[#1e1e1e] shadow-xl rounded-lg"
+        >
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium text-white">Edit spots order</h3>
+            <button
+              id="closeEditSpotsModal"
+              class="text-white/60 hover:text-white"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div id="spotsList" class="space-y-2 max-h-[60vh] overflow-y-auto">
+            <!-- Spots will be inserted here -->
+          </div>
+          <div class="mt-6 flex justify-end space-x-3">
+            <button
+              id="cancelEditSpots"
+              class="px-4 py-2 text-sm text-white/60 hover:text-white"
+            >
+              Cancel
+            </button>
+            <button
+              id="saveSpotsOrder"
+              class="px-4 py-2 text-sm bg-[#5e6ad2] text-white rounded-md hover:bg-[#4f58c2]"
+            >
+              Save changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

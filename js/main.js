@@ -1,3 +1,129 @@
+// Spots ordering functionality
+let spotsOrder = JSON.parse(localStorage.getItem("spotsOrder")) || [];
+
+// Function to get ordered spots
+function getOrderedSpots() {
+  if (spotsOrder.length === 0) {
+    // If no order is saved, use default order and save it
+    spotsOrder = spots.map((spot) => spot.streamId);
+    localStorage.setItem("spotsOrder", JSON.stringify(spotsOrder));
+    return spots;
+  }
+
+  // Create a map of spots by streamId for quick lookup
+  const spotsMap = new Map(spots.map((spot) => [spot.streamId, spot]));
+
+  // Return spots in the saved order, filtering out any that no longer exist
+  return spotsOrder
+    .map((streamId) => spotsMap.get(streamId))
+    .filter((spot) => spot !== undefined)
+    .concat(spots.filter((spot) => !spotsOrder.includes(spot.streamId))); // Add any new spots at the end
+}
+
+// Function to render spots list in the modal
+function renderSpotsList() {
+  const spotsList = $("#spotsList");
+  spotsList.empty();
+
+  const orderedSpots = getOrderedSpots();
+
+  orderedSpots.forEach((spot) => {
+    const spotEl = $(`
+      <div class="spot-item bg-[#2e2e2e] rounded-md px-1 py-2 cursor-move flex items-center" data-stream-id="${spot.streamId}">
+        <div class="flex items-center w-full gap-1">
+          <div class="w-8 flex items-center justify-center">
+            <i class="fas fa-grip-vertical text-white/50 text-[0.66em]"></i>
+          </div>
+          <div class="flex-1">
+            <div class="text-white font-medium">${spot.spot} <span class="text-white/60">/ ${spot.town}</span></div>
+          </div>
+        </div>
+      </div>
+    `);
+    spotsList.append(spotEl);
+  });
+
+  // Initialize drag and drop with containment
+  spotsList.sortable({
+    animation: 150,
+    ghostClass: "bg-[#363636]",
+    containment: "parent",
+    tolerance: "pointer",
+    cursor: "move",
+    axis: "y",
+    scroll: true,
+    scrollSensitivity: 30,
+    scrollSpeed: 10,
+    connectWith: "#spotsList",
+    helper: function (e, item) {
+      return $(item).clone();
+    },
+    start: function (e, ui) {
+      ui.placeholder.height(ui.item.height());
+    },
+    appendTo: spotsList,
+    sort: function (e, ui) {
+      ui.helper.css("top", ui.helper.position().top - 70);
+    },
+  });
+}
+
+// Function to close the modal
+function closeEditSpotsModal() {
+  $("#editSpotsModal").addClass("hidden");
+}
+
+// Modal event handlers
+$(document).ready(function () {
+  // Edit spots button click
+  $("#editSpotsBtn").on("click", function () {
+    renderSpotsList();
+    $("#editSpotsModal").removeClass("hidden");
+  });
+
+  // Close button click
+  $("#closeEditSpotsModal").on("click", function () {
+    closeEditSpotsModal();
+  });
+
+  // Cancel button click
+  $("#cancelEditSpots").on("click", function () {
+    closeEditSpotsModal();
+  });
+
+  // Save button click
+  $("#saveSpotsOrder").on("click", function () {
+    // Get new order from the DOM
+    const newOrder = $("#spotsList .spot-item")
+      .map(function () {
+        return $(this).data("stream-id");
+      })
+      .get();
+
+    // Save new order
+    spotsOrder = newOrder;
+    localStorage.setItem("spotsOrder", JSON.stringify(spotsOrder));
+
+    // Close modal and refresh the view
+    closeEditSpotsModal();
+    renderSpots(localStorage.getItem("mode") || "all");
+  });
+
+  // Close modal when clicking outside
+  $("#editSpotsModal").on("click", function (e) {
+    if (e.target === this) {
+      closeEditSpotsModal();
+    }
+  });
+
+  // Close modal on escape key
+  $(document).on("keydown", function (e) {
+    if (e.key === "Escape" && !$("#editSpotsModal").hasClass("hidden")) {
+      closeEditSpotsModal();
+    }
+  });
+});
+
 const spots = [
   {
     town: "Sao Pedro do Estoril",
@@ -379,7 +505,9 @@ let renderSpots = (mode) => {
   const container = $("#playersContainer");
   container.empty();
 
-  const filteredSpots = spots.filter((spot) => {
+  // Get ordered spots and then filter by mode
+  const orderedSpots = getOrderedSpots();
+  const filteredSpots = orderedSpots.filter((spot) => {
     if (mode === "all") return true;
     return spot.sports.includes(mode);
   });

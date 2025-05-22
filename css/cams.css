@@ -9,6 +9,35 @@
   @apply opacity-0 pointer-events-none invisible;
 }
 
+/* Spot sorter styles */
+#spotsList {
+  @apply space-y-2;
+}
+
+#spotsList .spot-item {
+  @apply transition-colors duration-150;
+}
+
+#spotsList .spot-item .fa-grip-vertical {
+  @apply w-4 h-4 flex items-center justify-center;
+}
+
+#spotsList .spot-item > div {
+  @apply min-w-0;
+}
+
+#spotsList .spot-item:hover {
+  @apply bg-[#363636];
+}
+
+#spotsList .ui-sortable-helper {
+  @apply shadow-lg border border-dashed border-white/50 bg-[#363636] w-full;
+}
+
+#spotsList .ui-sortable-placeholder {
+  @apply bg-[#363636] opacity-50;
+}
+
 /* Focused (fullscreen) player styles */
 .playerWrapper.focused {
   @apply fixed inset-0 w-full h-full z-50 rounded-none shadow-none border-0 transform-none flex items-center justify-center bg-black/95 overflow-hidden;
