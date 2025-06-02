@@ -243,3 +243,44 @@ select.dropdown-select[multiple] option:hover {
 .fullscreen-player {
   @apply w-full h-full object-contain block bg-transparent;
 }
+
+.wind-data {
+  @apply absolute top-2 right-2 bg-black/50 backdrop-blur-sm text-white text-sm py-1 px-2 rounded-md z-10;
+}
+
+/* Hide wind data by default on desktop */
+@media (min-width: 768px) {
+  .wind-data {
+    @apply opacity-0 transition-opacity duration-300;
+  }
+
+  .mediaContainer:hover .wind-data {
+    @apply opacity-100;
+  }
+}
+
+/* Always show wind data on mobile */
+@media (max-width: 767px) {
+  .wind-data {
+    @apply opacity-100;
+  }
+}
+
+/* Fullscreen mode styles */
+.playerWrapper.focused .wind-data {
+  @apply top-auto bottom-12 left-2 right-2 opacity-100 text-center;
+}
+
+/* Add spacing between wave and wind data */
+.wind-data i.fa-wind {
+  @apply ml-2;
+}
+
+/* Ensure wave and wind data have proper spacing */
+.wind-data .fa-water {
+  @apply mr-1;
+}
+
+.wind-data .fa-wind {
+  @apply ml-2 mr-1;
+}

@@ -226,5 +226,24 @@
         </div>
       </div>
     </div>
+
+    <style>
+      .mediaContainer::after {
+        content: attr(data-spot-name);
+        @apply absolute bottom-0 left-0 right-0 bg-black/50 backdrop-blur-sm text-white text-sm py-2 px-3 opacity-0 transition-opacity duration-300;
+      }
+
+      .wind-data {
+        @apply absolute top-0 right-0 bg-black/50 backdrop-blur-sm text-white text-sm py-1 px-2 opacity-0 transition-opacity duration-300;
+      }
+
+      .mediaContainer:hover .wind-data {
+        @apply opacity-100;
+      }
+
+      .sports-icons {
+        /* ... existing code ... */
+      }
+    </style>
   </body>
 </html>

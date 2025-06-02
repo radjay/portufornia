@@ -354,6 +354,8 @@ const spots = [
     region: "Linha",
     sports: ["surf"],
     streamSource: "quanteec",
+    latitude: 38.6975,
+    longitude: -9.3714,
   },
   {
     town: "Estoril",
@@ -362,6 +364,8 @@ const spots = [
     region: "Linha",
     sports: ["surf", "wing"],
     streamSource: "iol",
+    latitude: 38.7025,
+    longitude: -9.3789,
   },
   {
     town: "Carcavelos",
@@ -370,6 +374,8 @@ const spots = [
     region: "Linha",
     sports: ["surf", "kite"],
     streamSource: "quanteec",
+    latitude: 38.6847,
+    longitude: -9.3333,
   },
   {
     town: "Guincho",
@@ -378,6 +384,8 @@ const spots = [
     region: "Cascais",
     sports: ["surf", "windsurf", "kite", "wing"],
     streamSource: "quanteec",
+    latitude: 38.7314,
+    longitude: -9.4714,
   },
   {
     town: "Guincho",
@@ -386,6 +394,8 @@ const spots = [
     region: "Cascais",
     sports: ["surf", "windsurf", "kite", "wing"],
     streamSource: "quanteec",
+    latitude: 38.7333,
+    longitude: -9.4733,
   },
   {
     town: "Guincho",
@@ -394,6 +404,8 @@ const spots = [
     region: "Cascais",
     sports: ["surf"],
     streamSource: "iol",
+    latitude: 38.7289,
+    longitude: -9.4689,
   },
   {
     town: "Cascais",
@@ -403,6 +415,8 @@ const spots = [
     region: "Cascais",
     sports: ["windsurf", "wing"],
     streamSource: "iol",
+    latitude: 38.6958,
+    longitude: -9.4214,
   },
   {
     town: "Caparica",
@@ -411,6 +425,8 @@ const spots = [
     region: "Almada",
     sports: ["surf"],
     streamSource: "quanteec",
+    latitude: 38.6333,
+    longitude: -9.2333,
   },
   {
     town: "Caparica",
@@ -419,6 +435,8 @@ const spots = [
     region: "Almada",
     sports: ["surf"],
     streamSource: "quanteec",
+    latitude: 38.6367,
+    longitude: -9.2367,
   },
   {
     town: "Caparica",
@@ -427,6 +445,8 @@ const spots = [
     region: "Almada",
     sports: ["surf"],
     streamSource: "quanteec",
+    latitude: 38.6389,
+    longitude: -9.2389,
   },
   {
     town: "Caparica",
@@ -435,6 +455,8 @@ const spots = [
     region: "Almada",
     sports: ["windsurf", "kite", "wing", "surf"],
     streamSource: "quanteec",
+    latitude: 38.5667,
+    longitude: -9.1667,
   },
   {
     town: "Sesimbra",
@@ -444,6 +466,8 @@ const spots = [
     region: "Sesimbra",
     sports: ["kite", "windsurf", "wing"],
     streamSource: "iol",
+    latitude: 38.5167,
+    longitude: -9.1667,
   },
   {
     town: "Colares",
@@ -452,8 +476,116 @@ const spots = [
     region: "Sintra",
     sports: ["surf"],
     streamSource: "quanteec",
+    latitude: 38.8167,
+    longitude: -9.4667,
+  },
+  {
+    town: "Obidos",
+    spot: "Lagoa de Obidos",
+    streamId: "https://video-auth1.iol.pt/beachcam/bcfozdoarelho/playlist.m3u8",
+    region: "Obidos",
+    sports: ["surf", "windsurf", "kite", "wing"],
+    streamSource: "iol",
+    latitude: 39.4167,
+    longitude: -9.2167,
   },
 ];
+
+// Function to fetch wave data from Stormglass API
+async function fetchWaveData(latitude, longitude) {
+  try {
+    const response = await fetch(
+      `/api/weather?lat=${latitude}&lng=${longitude}&type=wave`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Weather API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Wave data response:", data);
+
+    // The API now returns wave height directly
+    return data.wave;
+  } catch (error) {
+    console.error("Error fetching wave data:", error);
+    return null;
+  }
+}
+
+// Function to fetch wind data from Open-Meteo API
+async function fetchWindData(latitude, longitude) {
+  try {
+    const response = await fetch(
+      `/api/weather?lat=${latitude}&lng=${longitude}&type=wind`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Weather API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    // The API now returns wind and gust directly
+    return {
+      speed: data.wind,
+      gusts: data.gust,
+    };
+  } catch (error) {
+    console.error("Error fetching wind data:", error);
+    return null;
+  }
+}
+
+// Function to update weather data display
+async function updateWeatherDisplay(mediaContainer, latitude, longitude) {
+  try {
+    // Fetch both wind and wave data in parallel
+    const [windData, waveHeight] = await Promise.all([
+      fetchWindData(latitude, longitude),
+      fetchWaveData(latitude, longitude),
+    ]);
+
+    if (!windData && !waveHeight) return;
+
+    let weatherDataEl = mediaContainer.querySelector(".wind-data");
+    if (!weatherDataEl) {
+      weatherDataEl = document.createElement("div");
+      weatherDataEl.className = "wind-data";
+      mediaContainer.appendChild(weatherDataEl);
+    }
+
+    let displayHTML = "";
+
+    if (waveHeight !== null) {
+      displayHTML += `<i class="fas fa-water"></i>${waveHeight.toFixed(1)}m`;
+    }
+
+    if (windData) {
+      displayHTML += `<i class="fas fa-wind"></i>${Math.round(
+        windData.speed
+      )} <span class="text-white/50">(${Math.round(windData.gusts)}*)</span>`;
+    }
+
+    weatherDataEl.innerHTML = displayHTML;
+
+    // Update weather data position when entering/exiting fullscreen
+    const wrapper = mediaContainer.closest(".playerWrapper");
+    if (wrapper) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === "class") {
+            const isFullscreen = wrapper.classList.contains("focused");
+            weatherDataEl.style.opacity = isFullscreen ? "1" : "";
+          }
+        });
+      });
+
+      observer.observe(wrapper, { attributes: true });
+    }
+  } catch (error) {
+    console.error("Error updating weather display:", error);
+  }
+}
 
 /**
  * Load and initialize HLS stream for a video element
@@ -478,6 +610,12 @@ let loadStream = (streamId, playerEl, streamSource) => {
     if (!mediaContainer.contains(playerEl)) {
       mediaContainer.appendChild(playerEl);
     }
+  }
+
+  // Get spot coordinates from the spot data
+  const spot = spots.find((s) => s.streamId === streamId);
+  if (spot && spot.latitude && spot.longitude) {
+    updateWeatherDisplay(mediaContainer, spot.latitude, spot.longitude);
   }
 
   $(mediaContainer)
@@ -524,6 +662,16 @@ let loadStream = (streamId, playerEl, streamSource) => {
       break;
     case "iol":
       streamUrl = streamId; // For IOL, the streamId is already the full URL
+      // Add error handling for IOL streams
+      fetch(streamUrl, { method: "HEAD" })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Stream not available");
+          }
+        })
+        .catch(() => {
+          errorHandler();
+        });
       break;
     default:
       console.error("Unknown stream source:", streamSource);
